@@ -32,12 +32,12 @@ function entropy(str) {
   const uppercase_ltr = countUppercase(str)
   const lowercase_ltr = countLowercase(str)
   const numbers_count = countNumbers(str)
-  if(((len/2) - 1 <= uppercase_ltr) && (len/2) - 1 <= lowercase_ltr){
-    result += 0.5
-  }
-  if(numbers_count > uppercase_ltr + lowercase_ltr){
-    result += 0.5
-  }
+  // if(((len/2) - 1 <= uppercase_ltr) && (len/2) - 1 <= lowercase_ltr){
+  //   result += 0.5
+  // }
+  // if(numbers_count > uppercase_ltr + lowercase_ltr){
+  //   result += 0.5
+  // }
 
   return result
 }
@@ -97,10 +97,10 @@ async function loadOriginData(origin) {
 
       let ent = parseInt((80 - (entropy(keyword) * 20)) * 2)
       ent = ent <= 0 ? 0 : (ent >= 100 ? 100 : ent)
-      if (ent == 0){
-        len_keywords -= 1
-        return
-      }
+      // if (ent == 0){
+      //   len_keywords -= 1
+      //   return
+      // }
       if(!(counter >= (current_page - 1) * per_page) || !(counter < (current_page * per_page))){
         counter++
         return
@@ -141,21 +141,62 @@ async function loadOriginData(origin) {
   document.getElementById("origin").textContent = `🔗 Origin: ${origin} (${counter})`;
   let page_count = Math.ceil(len_keywords / per_page)
   let pagination_div = document.getElementsByClassName("pagination")[0]
+  let page_range
   for(let i = 1; i <= page_count; i++){
-    let page_button = document.createElement("div")
-    page_button.classList.add("page-button")
-    if(i == current_page){
-      page_button.classList.add("page-button-active")
-    }
-    page_button.innerText = i
-    pagination_div.appendChild(page_button)
-    page_button.addEventListener("click", () => {
-      if (location.href.match(/page=\d{1,5}/)){
-        location = location.href.replace(location.href.match(/page=\d{1,5}/)[0], `page=${i}`)
-      }else {
-        location = location + `&page=${i}`
+
+    page_range = [current_page - 2 <= 0 ? null : current_page - 2, 
+      current_page - 1 <= 0 ? null : current_page - 1, 
+      current_page, 
+      parseInt(current_page) + 1 > page_count ? null : parseInt(current_page) + 1, 
+      parseInt(current_page) + 2 > page_count ? null : parseInt(current_page) + 2
+    ]
+  }
+  page_range.forEach((page) => {
+    if (page != null){
+      let page_button = document.createElement("div")
+      page_button.classList.add("page-button")
+      if(page == current_page){
+        page_button.classList.add("page-button-active")
       }
-    })
+      page_button.innerText = page
+      pagination_div.appendChild(page_button)
+      page_button.addEventListener("click", () => {
+        if (location.href.match(/page=\d{1,5}/)){
+          location = location.href.replace(location.href.match(/page=\d{1,5}/)[0], `page=${page}`)
+        }else {
+          location = location + `&page=${page}`
+        }
+      })
+    }
+  })
+  if(!page_range.includes(1) && !page_range.includes("1")){
+      let page_button = document.createElement("div")
+      page_button.classList.add("page-button")
+      page_button.innerText = "1"
+      pagination_div.insertBefore(document.createTextNode("..."), pagination_div.firstChild)
+      pagination_div.insertBefore(page_button, pagination_div.firstChild)
+      page_button.addEventListener("click", () => {
+        if (location.href.match(/page=\d{1,5}/)){
+          location = location.href.replace(location.href.match(/page=\d{1,5}/)[0], `page=1`)
+        }else {
+          location = location + `&page=1`
+        }
+      })
+  }
+  if(!page_range.includes(page_count) && !page_range.includes(page_count.toString())){
+      let page_button = document.createElement("div")
+      page_button.classList.add("page-button")
+      page_button.innerText = page_count
+      
+      pagination_div.appendChild(document.createTextNode("..."))
+      pagination_div.appendChild(page_button)
+      page_button.addEventListener("click", () => {
+        if (location.href.match(/page=\d{1,5}/)){
+          location = location.href.replace(location.href.match(/page=\d{1,5}/)[0], `page=${page_count}`)
+        }else {
+          location = location + `&page=${page_count}`
+        }
+      })
   }
 }
 

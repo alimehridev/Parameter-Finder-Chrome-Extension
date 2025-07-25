@@ -224,6 +224,7 @@ input:checked + .slider:before {
 }
 .pagination {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .page-button {
