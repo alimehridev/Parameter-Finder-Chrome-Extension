@@ -1,0 +1,7 @@
+1. Do not load all page buttons
+2. Add other filters: url, parameter, ...
+3. Sorting based on entropy
+4. Add generate url query functionality
+5. Logs Removing functionality
+6. Crawling Javascript files to find more parameters
+7. src, href attributes
