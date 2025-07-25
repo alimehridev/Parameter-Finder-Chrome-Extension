@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>DOM Parameter Finder</title>
+  </head>
+  <link rel="stylesheet" href="style.css">
+  <body>
+
+    <script src="helpers.js"></script>
+    <script src="jquery.js"></script>
+    <div class="container">
+      <div class="main_dashboard">
+        <div class="input-group">
+          <input type="text" id="originInput" placeholder="Enter origin..." />
+          <button id="addOriginBtn">Add</button>
+        </div>
+
+        <h1>🔍 Origin List</h1>
+        <ul id="originList"></ul>
+        <div id="added_origin"></div>
+
+        <script src="addorigin.js"></script>
+
+      </div>
+      <div class="origin_dashboard">
+        <div class="input-group">
+          <div style="display:flex; justify-content: start;">
+            <span class="backBtn">Back</span>
+          </div>
+          <div class="attribute-list">
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="id" id="id">
+                <span class="slider"></span>
+              </label>
+              id attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="class" id="class">
+                <span class="slider"></span>
+              </label>
+              class attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="name" id="name">
+                <span class="slider"></span>
+              </label>
+              name attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="href" id="href">
+                <span class="slider"></span>
+              </label>
+              href attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="src" id="src">
+                <span class="slider"></span>
+              </label>
+              src attribute
+            </div>
+            <div class="attribute">
+              <label class="switch">
+                <input type="checkbox" name="js_files" id="js_files">
+                <span class="slider"></span>
+              </label>
+              JavaScript files
+            </div>
+          </div>
+          <button id="addBtn">Save</button>
+        </div>
+
+        <ul id="keywordList"></ul>
+
+        <h1>🔍 Discovered Parameters</h1>
+        <div id="origin"></div>
+        <div id="data"></div>
+
+        <script src="dashboard.js"></script>
+        <script src="addkeywords.js"></script>
+      </div>
+    </div>
+
+    <script src="dash_checker.js"></script>
+</body>
+</html>
