@@ -10,6 +10,9 @@ h2 { margin-top: 40px; }
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .keyword {
     background: #eee;
@@ -198,4 +201,38 @@ input:checked + .slider:before {
   border-color: #3a945b;
   color: white;
   text-align: center;
+}
+.keyword {
+  max-width: 199px;
+  overflow: hidden;
+}
+.removeLogBtn {
+  transition: all 0.2s;
+  cursor: pointer;
+  padding: 2px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #cfcfcf;
+  border-radius: 5px;
+}
+.url-anchor {
+  color: gray;
+}
+.removeLogBtn:hover {
+  transform: scale(1.2);
+}
+.pagination {
+  display: flex;
+  align-items: center;
+}
+.page-button {
+  padding: 10px 10px;
+  margin: 3px;
+  display: flex;
+  background-color: rgb(216, 216, 216);
+  cursor: pointer;
+}
+.page-button-active {
+  background-color: rgb(136, 136, 136);
 }

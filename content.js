@@ -1,7 +1,5 @@
 const origin = location.origin;
 let uniqueParameters = []
-
-
 function isUnlikelyWebParam(param) {
   if (param.length > 20 && !param.includes('_')) return true;
   if (/^[a-zA-Z0-9]+$/.test(param) && param.length >= 8) {
@@ -10,7 +8,6 @@ function isUnlikelyWebParam(param) {
   }
   return false;
 }
-
 function estimateEntropy(str) {
   const freq = {};
   for (let char of str) {
@@ -62,10 +59,6 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
     });
   });
 }
-
-
-
-
 
 function getOriginFactors(origin, callback) {
   chrome.storage.local.get("origin_factors", (data) => {
@@ -150,6 +143,7 @@ function getKeywordsByOrigin(origin, callback) {
     callback(result);
   });
 }
+
 function getKeywordsByPageUrl(origin, pageUrl, callback) {
   const storageKey = 'origin_url_keywords';
 
