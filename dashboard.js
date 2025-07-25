@@ -35,7 +35,7 @@ function entropy(str) {
   if(((len/2) - 1 <= uppercase_ltr) && (len/2) - 1 <= lowercase_ltr){
     result += 0.5
   }
-  if(countNumbers(str) > uppercase_ltr + lowercase_ltr){
+  if(numbers_count > uppercase_ltr + lowercase_ltr){
     result += 0.5
   }
 
@@ -150,12 +150,15 @@ async function loadOriginData(origin) {
     page_button.innerText = i
     pagination_div.appendChild(page_button)
     page_button.addEventListener("click", () => {
-      location = location.href.replace(location.href.match(/page=\d{1,5}/)[0], `page=${i}`)
+      if (location.href.match(/page=\d{1,5}/)){
+        location = location.href.replace(location.href.match(/page=\d{1,5}/)[0], `page=${i}`)
+      }else {
+        location = location + `&page=${i}`
+      }
     })
   }
 }
 
-const origin = getQueryParam("origin");
-if (origin) {
-  loadOriginData(origin);
+if (hostname) {
+  loadOriginData(hostname);
 }
