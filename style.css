@@ -58,7 +58,7 @@ input[type="text"] {
     cursor: pointer;
     transition: background-color 0.2s;
 }
-#addBtn, #addOriginBtn, #urlQueryGenBtn {
+#addBtn, #addOriginBtn, #urlQueryGenBtn, #removeAllBtn {
     padding: 10px 15px;
     border: none;
     background-color: #4CAF50;
@@ -67,12 +67,17 @@ input[type="text"] {
     cursor: pointer;
     transition: background-color 0.2s;
 }
+#removeAllBtn {
+  width: 100%;
+  margin-top: 10px;
+  background-color: #ff0000;
+}
 #urlQueryGenBtn {
   width: 100%;
   margin-top: 10px;
   background-color: #af3333;
 }
-#addBtn:hover, #addOriginBtn:hover, #urlQueryGenBtn:hover {
+#addBtn:hover, #addOriginBtn:hover, #urlQueryGenBtn:hover, #removeAllBtn:hover {
     background-color: #45a049;
 }
 

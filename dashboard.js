@@ -132,11 +132,11 @@ async function loadOriginData(origin) {
       
       let remove_log_btn = document.createElement("span")
       remove_log_btn.classList.add("removeLogBtn")
+      remove_log_btn.addEventListener("click", () => {
+        removeParameterFromOrigin(hostname, keyword)
+      })
       remove_log_btn.innerText = "x"
       pageDiv.appendChild(remove_log_btn)
-      remove_log_btn.addEventListener("click", () => {
-        removeLogFunction(pageDiv, origin, url, keyword)
-      })
       dataDiv.appendChild(pageDiv);
       counter++
     });
@@ -206,4 +206,60 @@ async function loadOriginData(origin) {
 
 if (hostname) {
   loadOriginData(hostname);
+}
+
+function clearOriginContent(origin) {
+  const key = "origin_url_keywords";
+
+  chrome.storage.local.get([key], (result) => {
+    const data = result[key] || {};
+
+    if (data[origin]) {
+      data[origin] = {};  // محتوا رو پاک کن
+
+      chrome.storage.local.set({ [key]: data }, () => {
+        console.log(`Cleared content for origin: ${origin}`);
+      });
+    } else {
+      console.log(`Origin ${origin} not found.`);
+    }
+  });
+}
+
+document.getElementById("removeAllBtn").addEventListener("click", () => {
+  let confirmation = confirm("Are you sure ?")
+  if(confirmation){
+    clearOriginContent(hostname)
+    location.reload()
+  }
+})
+
+
+function removeParameterFromOrigin(origin, keywordToRemove) {
+  let confirmation = confirm("Are you sure ?")
+  if (confirmation){
+    const key = "origin_url_keywords";
+    chrome.storage.local.get([key], (result) => {
+      const data = result[key] || {};
+
+      if (!data[origin]) {
+        console.warn(`Origin '${origin}' not found.`);
+        return;
+      }
+
+      Object.keys(data[origin]).forEach((url) => {
+        const keywords = data[origin][url]?.keywords;
+        
+        if (Array.isArray(keywords)) {
+          const filtered = keywords.filter(kw => kw !== keywordToRemove);
+          data[origin][url].keywords = filtered;
+        }
+      });
+
+      chrome.storage.local.set({ [key]: data }, () => {
+        console.log(`Keyword '${keywordToRemove}' removed from all URLs under '${origin}'.`);
+      });
+    });
+    location.reload()
+  }
 }
