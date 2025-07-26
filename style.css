@@ -58,7 +58,7 @@ input[type="text"] {
     cursor: pointer;
     transition: background-color 0.2s;
 }
-#addBtn, #addOriginBtn {
+#addBtn, #addOriginBtn, #urlQueryGenBtn {
     padding: 10px 15px;
     border: none;
     background-color: #4CAF50;
@@ -67,8 +67,12 @@ input[type="text"] {
     cursor: pointer;
     transition: background-color 0.2s;
 }
-
-#addBtn:hover, #addOriginBtn:hover {
+#urlQueryGenBtn {
+  width: 100%;
+  margin-top: 10px;
+  background-color: #af3333;
+}
+#addBtn:hover, #addOriginBtn:hover, #urlQueryGenBtn:hover {
     background-color: #45a049;
 }
 

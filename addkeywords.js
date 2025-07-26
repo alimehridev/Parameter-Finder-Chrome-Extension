@@ -17,11 +17,11 @@ document.getElementById("addBtn").addEventListener("click", () => {
         src: src_chkbox,
         js_files: js_files_chkbox
     }
-    storeOriginFactors(origin, factors)
+    storeOriginFactors(hostname, factors)
 })
 
 
-getOriginFactors(origin, (factors) => {
+getOriginFactors(hostname, (factors) => {
   if (factors) {
     console.log("Factors for origin:", factors);
     document.getElementById("id").checked = factors.id

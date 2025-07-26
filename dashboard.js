@@ -32,12 +32,12 @@ function entropy(str) {
   const uppercase_ltr = countUppercase(str)
   const lowercase_ltr = countLowercase(str)
   const numbers_count = countNumbers(str)
-  // if(((len/2) - 1 <= uppercase_ltr) && (len/2) - 1 <= lowercase_ltr){
-  //   result += 0.5
-  // }
-  // if(numbers_count > uppercase_ltr + lowercase_ltr){
-  //   result += 0.5
-  // }
+  if(((len/2) - 1 <= uppercase_ltr) && (len/2) - 1 <= lowercase_ltr){
+    result += 0.5
+  }
+  if(numbers_count > uppercase_ltr + lowercase_ltr){
+    result += 0.5
+  }
 
   return result
 }
@@ -96,11 +96,15 @@ async function loadOriginData(origin) {
     keywords['keywords'].forEach(keyword => {
 
       let ent = parseInt((80 - (entropy(keyword) * 20)) * 2)
+      if(keyword.length > 13){
+        len_keywords -= 1
+        return
+      }
       ent = ent <= 0 ? 0 : (ent >= 100 ? 100 : ent)
-      // if (ent == 0){
-      //   len_keywords -= 1
-      //   return
-      // }
+      if (ent == 0){
+        len_keywords -= 1
+        return
+      }
       if(!(counter >= (current_page - 1) * per_page) || !(counter < (current_page * per_page))){
         counter++
         return
