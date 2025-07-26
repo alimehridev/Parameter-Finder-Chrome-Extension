@@ -101,13 +101,19 @@ function checkForParameters() {
           console.log("name attributes: ", factors.name)
         }
         if (factors.href == 1){
-          const uniqueHrefs = [...new Set(
-            Array.from(document.querySelectorAll('[href]'))
-              .map(el => el.getAttribute('href'))
-              .filter(href => href)
-          )]
+          let hrefs = Array.from(document.querySelectorAll('[href]')).map(el => {
+            if(el.href.startsWith("/") || el.href.startsWith(location.origin)){
+              let href = el.href.split("?")[1]
+              if(href != undefined) href = href.split("&").map(item => item.split("=")[0])
+              return href
+            }
+            return undefined
+          }).filter(item => item != undefined)
+          uniqueParameters = uniqueParameters.concat([...new Set(
+            hrefs.flat()
+          )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          console.log(uniqueHrefs);
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
           console.log("href attributes: ", factors.href)
         }
         if (factors.src == 1){
