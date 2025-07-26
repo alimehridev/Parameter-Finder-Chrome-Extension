@@ -117,12 +117,19 @@ function checkForParameters() {
           console.log("href attributes: ", factors.href)
         }
         if (factors.src == 1){
-          const uniqueSrcs = [...new Set(
-            Array.from(document.querySelectorAll('[src]'))
-              .map(el => el.getAttribute('src'))
-              .filter(src => src)
-          )]
-          console.log(uniqueSrcs);
+          let srcs = Array.from(document.querySelectorAll('[src]')).map(el => {
+            if(el.getAttribute("src").startsWith("/") || el.getAttribute("src").startsWith(location.origin)){
+              let src = el.getAttribute("src").split("?")[1]
+              if(src != undefined) src = src.split("&").map(item => item.split("=")[0])
+              return src
+            }
+            return undefined
+          }).filter(item => item != undefined)
+          uniqueParameters = uniqueParameters.concat([...new Set(
+            srcs.flat()
+          )])
+          uniqueParameters = [...new Set(uniqueParameters)]
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
           console.log("src attributes: ", factors.src)
         }
         
