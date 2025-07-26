@@ -8,7 +8,7 @@ document.getElementById("addBtn").addEventListener("click", () => {
     let name_chkbox = +document.getElementById("name").checked
     let href_chkbox = +document.getElementById("href").checked
     let src_chkbox = +document.getElementById("src").checked
-    let js_files_chkbox = +document.getElementById("js_files").checked
+    let js_chkbox = +document.getElementById("js").checked
     let json_chkbox = +document.getElementById("json").checked
     let url_chkbox = +document.getElementById("url").checked
     let factors = {
@@ -17,7 +17,7 @@ document.getElementById("addBtn").addEventListener("click", () => {
         name: name_chkbox,
         href: href_chkbox,
         src: src_chkbox,
-        js_files: js_files_chkbox,
+        js: js_chkbox,
         json: json_chkbox,
         url: url_chkbox
     }
@@ -33,7 +33,7 @@ getOriginFactors(hostname, (factors) => {
     document.getElementById("name").checked = factors.name
     document.getElementById("href").checked = factors.href
     document.getElementById("src").checked = factors.src
-    document.getElementById("js_files").checked = factors.js_files
+    document.getElementById("js").checked = factors.js
     document.getElementById("json").checked = factors.json
     document.getElementById("url").checked = factors.url
   } 

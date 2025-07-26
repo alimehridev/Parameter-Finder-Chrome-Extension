@@ -24,7 +24,7 @@ function storeOriginFactors(origin, factors) {
       name: factors.name,
       href: factors.href,
       src: factors.src,
-      js_files: factors.js_files,
+      js: factors.js,
       json: factors.json,
       url: factors.url
     };

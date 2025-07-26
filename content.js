@@ -133,8 +133,8 @@ function checkForParameters() {
           console.log("src attributes: ", factors.src)
         }
         
-        if (factors.js_files == 1){
-          console.log("js_files attributes: ", factors.js_files)
+        if (factors.js == 1){
+          console.log("js: ", factors.js)
         }
         
         if (factors.json == 1){
