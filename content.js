@@ -127,6 +127,13 @@ function checkForParameters() {
         if (factors.js_files == 1){
           console.log("js_files attributes: ", factors.js_files)
         }
+        
+        if (factors.json == 1){
+          console.log("json attributes: ", factors.json)
+        }
+        if (factors.url == 1){
+          console.log("url attributes: ", factors.url)
+        }
       }
     });
 }

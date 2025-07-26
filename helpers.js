@@ -24,7 +24,9 @@ function storeOriginFactors(origin, factors) {
       name: factors.name,
       href: factors.href,
       src: factors.src,
-      js_files: factors.js_files
+      js_files: factors.js_files,
+      json: factors.json,
+      url: factors.url
     };
 
     chrome.storage.local.set({ origin_factors: allFactors }, () => {

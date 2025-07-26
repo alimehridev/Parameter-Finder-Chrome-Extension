@@ -1,16 +1,3 @@
-function getKeywordsByOrigin(origin, callback) {
-  if (!chrome.runtime?.id) {
-    console.warn("Extension context is invalidated.");
-    return;
-  }
-  chrome.storage.local.get("origin_url_keywords", (data) => {
-    const all = data || {};
-
-    const result = all[origin] || null;
-    callback(result);
-  });
-}
-
 function chunkArrayInPairs(arr, chunk) {
   const result = [];
   for (let i = 0; i < arr.length; i += chunk) {
@@ -50,7 +37,6 @@ function openModal() {
             keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
         }
         keywords = [...new Set(keywords)]
-        console.log(keywords);
         let chunk = 20
         keywords = chunkArrayInPairs(keywords, chunk)
         keywords.forEach(chunk => {
@@ -96,7 +82,6 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
                 keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
             }
             keywords = [...new Set(keywords)]
-            console.log(keywords);
             let chunk = parseInt(document.getElementById("chunk-number").value)
             keywords = chunkArrayInPairs(keywords, chunk)
             keywords.forEach(chunk => {
