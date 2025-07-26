@@ -6,6 +6,7 @@
     <title>DOM Parameter Finder</title>
   </head>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modal.css">
   <body>
 
     <script src="helpers.js"></script>
@@ -88,8 +89,20 @@
         </div>
         <button id="removeAllBtn">Remove all</button>
         <button id="urlQueryGenBtn">Generate URL Query</button>
+
+
       </div>
     </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModalBtn" class="close-btn">&times;</span>
+        <h2>Modal Title</h2>
+        <textarea name="output" id="output"></textarea>
+        <p>This is a simple modal window.</p>
+      </div>
+    </div>
+
+    <script src="modal.js"></script>
     <script src="dashboard.js"></script>
     <script src="addkeywords.js"></script>
     <script src="dash_checker.js"></script>

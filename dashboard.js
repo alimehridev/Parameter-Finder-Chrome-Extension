@@ -305,8 +305,10 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
 
 document.getElementById("addCustomParameterBtn").addEventListener("click", () => {
   let customPrompt = prompt("Enter your custom parameter value:")
-  customPrompt = customPrompt.split(",")
-  customPrompt = customPrompt.map(item => item.trim())
-  saveKeywordsToOriginFactors(customPrompt, hostname + "/", hostname)
-  location.reload()
+  if (customPrompt != null){
+    customPrompt = customPrompt.split(",")
+    customPrompt = customPrompt.map(item => item.trim())
+    saveKeywordsToOriginFactors(customPrompt, hostname + "/", hostname)
+    location.reload()
+  }
 })
