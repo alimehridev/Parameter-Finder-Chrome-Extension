@@ -34,7 +34,9 @@ function openModal() {
     Object.keys(result).map(key => {
         let keywords = result[key]['keywords']
         if (key != `${getQueryParam("origin")}/`){
-            keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
+            try{
+              keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
+            }catch{}
         }
         keywords = [...new Set(keywords)]
         let chunk = 20
@@ -79,7 +81,9 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
         Object.keys(result).map(key => {
             let keywords = result[key]['keywords']
             if (key != `${getQueryParam("origin")}/`){
+              try{
                 keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
+              }catch{}
             }
             keywords = [...new Set(keywords)]
             let chunk = parseInt(document.getElementById("chunk-number").value)

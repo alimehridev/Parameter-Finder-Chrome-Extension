@@ -96,7 +96,7 @@ async function loadOriginData(origin) {
     keywords['keywords'].forEach(keyword => {
 
       let ent = parseInt((80 - (entropy(keyword) * 20)) * 2)
-      if(keyword.length > 13){
+      if(keyword.length > 15){
         len_keywords -= 1
         return
       }
