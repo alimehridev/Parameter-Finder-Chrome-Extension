@@ -5,3 +5,4 @@
 5. Logs Removing functionality
 6. Crawling Javascript files to find more parameters
 7. src, href attributes
+8. There is a bug in pagination and showing parameters, page numbers are wrong and items count

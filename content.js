@@ -80,7 +80,6 @@ function checkForParameters() {
 
           uniqueParameters = [...new Set(uniqueParameters)]
           saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
-          console.log(uniqueParameters.length);
           console.log("id attributes: ", factors.id)
         }
         if (factors.class == 1){
@@ -91,7 +90,6 @@ function checkForParameters() {
           )]);
           uniqueParameters = [...new Set(uniqueParameters)]
           saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
-          console.log(uniqueParameters.length);
           console.log("class attributes: ", factors.class)
         }
         if (factors.name == 1){
@@ -100,7 +98,6 @@ function checkForParameters() {
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
           saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
-          console.log(uniqueParameters.length);
           console.log("name attributes: ", factors.name)
         }
         if (factors.href == 1){
@@ -122,7 +119,6 @@ function checkForParameters() {
           console.log(uniqueSrcs);
           console.log("src attributes: ", factors.src)
         }
-        console.log(uniqueParameters.length);
         
         if (factors.js_files == 1){
           console.log("js_files attributes: ", factors.js_files)
@@ -132,6 +128,11 @@ function checkForParameters() {
           console.log("json attributes: ", factors.json)
         }
         if (factors.url == 1){
+          uniqueParameters = [...new Set(
+            location.search.split("?")[1].split("&").map(item => item.split("=")[0])
+          )]
+          uniqueParameters = [...new Set(uniqueParameters)]
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
           console.log("url attributes: ", factors.url)
         }
       }
