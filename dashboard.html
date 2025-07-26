@@ -96,9 +96,19 @@
     <div id="myModal" class="modal">
       <div class="modal-content">
         <span id="closeModalBtn" class="close-btn">&times;</span>
-        <h2>Modal Title</h2>
-        <textarea name="output" id="output"></textarea>
-        <p>This is a simple modal window.</p>
+        <h2 style="margin-top: 10px;">Advanced options</h2>
+        <label style="margin-top: 10px;">
+          <span>Fixed part:</span>
+          <input type="text" id="fixed-part" placeholder="XXXXX" value="XXXXX" />
+        </label>
+        <label style="margin-top: 10px;">
+          <span>Chunk:</span>
+          <input type="text" id="chunk-number" placeholder="20" value="20" />
+        </label>
+        <button id="urlQueryReGenBtn">reGenerate</button>
+        <textarea readonly name="output" id="output"></textarea>
+
+        <span id="copyBtn">copy</span>
       </div>
     </div>
 

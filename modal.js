@@ -43,6 +43,7 @@ function openModal() {
     const all = data.origin_url_keywords || {};
 
     const result = all[getQueryParam("origin")] || null;
+    let fixed_value = document.getElementById("fixed-part").value
     Object.keys(result).map(key => {
         let keywords = result[key]['keywords']
         if (key != `${getQueryParam("origin")}/`){
@@ -50,10 +51,10 @@ function openModal() {
         }
         keywords = [...new Set(keywords)]
         console.log(keywords);
-        let chunk = 20
+        let chunk = document.getElementById("chunk-number").value
         keywords = chunkArrayInPairs(keywords, chunk)
         keywords.forEach(chunk => {
-            document.getElementById("output").textContent += `${key}?${buildQueryString(chunk)}\n` 
+            document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
         })
     })
     
@@ -67,5 +68,43 @@ function closeModal() {
 }
 document.getElementById("closeModalBtn").addEventListener("click", closeModal)
 document.getElementById("urlQueryGenBtn").addEventListener("click", openModal)
+
+
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const text = document.getElementById("output").textContent
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      console.log("Text copied to clipboard!");
+    })
+    .catch(err => {
+      console.error("Failed to copy: ", err);
+    });
+})
+
+
+document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
+    document.getElementById("output").textContent = ""
+    chrome.storage.local.get("origin_url_keywords", (data) => {
+        const all = data.origin_url_keywords || {};
+
+        const result = all[getQueryParam("origin")] || null;
+        let fixed_value = document.getElementById("fixed-part").value
+        Object.keys(result).map(key => {
+            let keywords = result[key]['keywords']
+            if (key != `${getQueryParam("origin")}/`){
+                keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
+            }
+            keywords = [...new Set(keywords)]
+            console.log(keywords);
+            let chunk = document.getElementById("chunk-number").value
+            keywords = chunkArrayInPairs(keywords, chunk)
+            keywords.forEach(chunk => {
+                document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
+            })
+        })
+  });
+})
+
 
 openModal()

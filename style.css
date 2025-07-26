@@ -58,7 +58,7 @@ input[type="text"] {
     cursor: pointer;
     transition: background-color 0.2s;
 }
-#addBtn, #addOriginBtn, #urlQueryGenBtn, #removeAllBtn {
+#addBtn, #addOriginBtn, #urlQueryGenBtn, #removeAllBtn, #urlQueryReGenBtn {
     padding: 10px 15px;
     border: none;
     background-color: #4CAF50;
@@ -66,6 +66,11 @@ input[type="text"] {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s;
+}
+#urlQueryReGenBtn {
+  width: 100%;
+  margin-bottom: 10px;
+  background-color: #0066ff;
 }
 #removeAllBtn {
   width: 100%;
@@ -77,7 +82,7 @@ input[type="text"] {
   margin-top: 10px;
   background-color: #af3333;
 }
-#addBtn:hover, #addOriginBtn:hover, #urlQueryGenBtn:hover, #removeAllBtn:hover, #discovered_parameters_header span:hover {
+#addBtn:hover, #addOriginBtn:hover, #urlQueryReGenBtn:hover, #urlQueryGenBtn:hover, #removeAllBtn:hover, #discovered_parameters_header span:hover {
     background-color: #45a049;
 }
 
