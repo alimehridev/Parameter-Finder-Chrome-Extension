@@ -263,3 +263,50 @@ function removeParameterFromOrigin(origin, keywordToRemove) {
     location.reload()
   }
 }
+
+
+
+
+function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
+  if (!Array.isArray(keywords) || !pageUrl || !origin) {
+    console.error("Invalid input");
+    return;
+  }
+
+  const storageKey = 'origin_url_keywords';
+
+  chrome.storage.local.get([storageKey], (result) => {
+    const allData = result[storageKey] || {};
+
+    if (!allData[origin]) {
+      allData[origin] = {};
+    }
+
+    const existingEntry = allData[origin][pageUrl];
+
+    if (existingEntry) {
+      const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
+      if (newKeywords.length > 0) {
+        existingEntry.keywords.push(...newKeywords);
+        existingEntry.timestamp = Date.now();
+      }
+    } else {
+      allData[origin][pageUrl] = {
+        keywords: [...keywords],
+        timestamp: Date.now()
+      };
+    }
+
+    chrome.storage.local.set({ [storageKey]: allData }, () => {
+      console.log(`Saved/updated data for origin: ${origin}, URL: ${pageUrl}`);
+    });
+  });
+}
+
+document.getElementById("addCustomParameterBtn").addEventListener("click", () => {
+  let customPrompt = prompt("Enter your custom parameter value:")
+  customPrompt = customPrompt.split(",")
+  customPrompt = customPrompt.map(item => item.trim())
+  saveKeywordsToOriginFactors(customPrompt, hostname + "/", hostname)
+  location.reload()
+})

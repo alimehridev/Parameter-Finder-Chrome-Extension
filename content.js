@@ -193,5 +193,3 @@ chrome.storage.local.get("added_origins", (result) => {
     chrome.runtime.sendMessage({ type: "setBadge", text: "off" });
   }
 });
-
-
