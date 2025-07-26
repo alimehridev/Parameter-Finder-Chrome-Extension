@@ -51,7 +51,7 @@ function openModal() {
         }
         keywords = [...new Set(keywords)]
         console.log(keywords);
-        let chunk = document.getElementById("chunk-number").value
+        let chunk = 20
         keywords = chunkArrayInPairs(keywords, chunk)
         keywords.forEach(chunk => {
             document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
@@ -97,7 +97,7 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
             }
             keywords = [...new Set(keywords)]
             console.log(keywords);
-            let chunk = document.getElementById("chunk-number").value
+            let chunk = parseInt(document.getElementById("chunk-number").value)
             keywords = chunkArrayInPairs(keywords, chunk)
             keywords.forEach(chunk => {
                 document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
@@ -105,6 +105,3 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
         })
   });
 })
-
-
-openModal()
