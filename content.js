@@ -141,9 +141,9 @@ function checkForParameters() {
           console.log("json attributes: ", factors.json)
         }
         if (factors.url == 1){
-          uniqueParameters = [...new Set(
+          uniqueParameters = uniqueParameters.concat([...new Set(
             location.search.split("?")[1].split("&").map(item => item.split("=")[0])
-          )]
+          )])
           uniqueParameters = [...new Set(uniqueParameters)]
           saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
           console.log("url attributes: ", factors.url)
