@@ -8,12 +8,12 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get("urls", (result) => {
     const arr = result["urls"] || [];
-      const origin = new URL(tab.url).origin;
-      if (arr.includes(origin)) {
-        const url = chrome.runtime.getURL("dashboard.html") + `?origin=${encodeURIComponent(origin)}`;
+      let url = new URL(tab.url).href;
+      if (arr.includes(url)) {
+        url = chrome.runtime.getURL("dashboard.html") + `?url=${encodeURIComponent(url)}`;
         chrome.tabs.create({ url });
       }else{
-        const url = chrome.runtime.getURL("dashboard.html") + `?origin_add=${encodeURIComponent(origin)}`;
+        url = chrome.runtime.getURL("dashboard.html") + `?url_add=${encodeURIComponent(url)}`;
         chrome.tabs.create({ url });
       }
   });

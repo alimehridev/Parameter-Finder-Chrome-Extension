@@ -102,7 +102,7 @@ li {
     border: 1px solid #ddd;
 }
 
-.remove-btn, .origin-remove-btn {
+.remove-btn, .url-remove-btn {
     background-color: #270400;
     color: white;
     border: none;
@@ -111,7 +111,7 @@ li {
     cursor: pointer;
 }
 
-.remove-btn:hover, .origin-remove-btn:hover {
+.remove-btn:hover, .url-remove-btn:hover {
     background: #c0392b;
 }
 

@@ -87,3 +87,17 @@ function extractParamNames(jsCode) {
   }
   return Array.from(found);
 }
+
+function estimateEntropy(str) {
+  const freq = {};
+  for (let char of str) {
+    freq[char] = (freq[char] || 0) + 1;
+  }
+  let entropy = 0;
+  const len = str.length;
+  for (let char in freq) {
+    const p = freq[char] / len;
+    entropy -= p * Math.log2(p);
+  }
+  return entropy;
+}

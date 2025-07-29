@@ -1,15 +1,15 @@
 const input = document.getElementById("urlInput");
 const addUrlBtn = document.getElementById("addUrlBtn");
 const urlList = document.getElementById("urlList");
-const origin_key_2 = `urls`;
+const url_key_2 = `urls`;
 
-function remove_origin_from_list(li){
+function remove_url_from_list(li){
     const payload = li.firstChild.innerText
-    chrome.storage.local.get(origin_key_2, (result) => {
-        if (!result[origin_key_2] || result[origin_key_2].length === 0) return;
+    chrome.storage.local.get(url_key_2, (result) => {
+        if (!result[url_key_2] || result[url_key_2].length === 0) return;
 
-        const updated = result[origin_key_2].filter((item) => item !== payload);
-        chrome.storage.local.set({ [origin_key_2]: updated }, () => {
+        const updated = result[url_key_2].filter((item) => item !== payload);
+        chrome.storage.local.set({ [url_key_2]: updated }, () => {
             li.remove();
         });
     });
@@ -22,27 +22,27 @@ addUrlBtn.addEventListener("click", () => {
 
     const li = document.createElement("li");
     const a = document.createElement("a")
-    a.href = `?origin=${value}`
+    a.href = `?url=${value}`
     a.innerText = value
     const remove_button = document.createElement("button")
     remove_button.innerText = "❌"
-    remove_button.classList.add("origin-remove-btn")
+    remove_button.classList.add("url-remove-btn")
     li.appendChild(a)
     li.appendChild(remove_button)
-    li.querySelector(".origin-remove-btn").addEventListener("click", () => {
-        remove_origin_from_list(li)
+    li.querySelector(".url-remove-btn").addEventListener("click", () => {
+        remove_url_from_list(li)
     });
     urlList.appendChild(li);
     input.value = "";
 
-    chrome.storage.local.get(origin_key_2, (result) => {
-        const arr = result[origin_key_2] || [];
+    chrome.storage.local.get(url_key_2, (result) => {
+        const arr = result[url_key_2] || [];
         
         if (!arr.includes(value)) {
             arr.push(value);
         }
 
-        chrome.storage.local.set({ [origin_key_2]: arr }, () => {
+        chrome.storage.local.set({ [url_key_2]: arr }, () => {
             console.log("Added:", value);
         });
     });
@@ -56,20 +56,20 @@ input.addEventListener("keydown", (e) => {
 
 
 
-chrome.storage.local.get(origin_key_2, (result) => {
-    if (!result[origin_key_2] || result[origin_key_2].length === 0) return;
-    result[origin_key_2].forEach((item) => { 
+chrome.storage.local.get(url_key_2, (result) => {
+    if (!result[url_key_2] || result[url_key_2].length === 0) return;
+    result[url_key_2].forEach((item) => { 
         const li = document.createElement("li");
         const a = document.createElement("a")
-        a.href = `?origin=${item}`
+        a.href = `?url=${item}`
         a.innerText = item
         const remove_button = document.createElement("button")
         remove_button.innerText = "❌"
-        remove_button.classList.add("origin-remove-btn")
+        remove_button.classList.add("url-remove-btn")
         li.appendChild(a)
         li.appendChild(remove_button)
-        li.querySelector(".origin-remove-btn").addEventListener("click", () => {
-            remove_origin_from_list(li)
+        li.querySelector(".url-remove-btn").addEventListener("click", () => {
+            remove_url_from_list(li)
         });
         urlList.appendChild(li);
     })

@@ -1,21 +1,9 @@
-const origin = location.origin;
+const url = location.href;
 let uniqueParameters = []
-function estimateEntropy(str) {
-  const freq = {};
-  for (let char of str) {
-    freq[char] = (freq[char] || 0) + 1;
-  }
-  let entropy = 0;
-  const len = str.length;
-  for (let char in freq) {
-    const p = freq[char] / len;
-    entropy -= p * Math.log2(p);
-  }
-  return entropy;
-}
 
-function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
-  if (!Array.isArray(keywords) || !pageUrl || !origin) {
+
+function saveKeywordsToOriginFactors(keywords, pageUrl, url) {
+  if (!Array.isArray(keywords) || !pageUrl || !url) {
     console.error("Invalid input");
     return;
   }
@@ -25,11 +13,11 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};
 
-    if (!allData[origin]) {
-      allData[origin] = {};
+    if (!allData[url]) {
+      allData[url] = {};
     }
 
-    const existingEntry = allData[origin][pageUrl];
+    const existingEntry = allData[url][pageUrl];
 
     if (existingEntry) {
       const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
@@ -38,22 +26,22 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
         existingEntry.timestamp = Date.now();
       }
     } else {
-      allData[origin][pageUrl] = {
+      allData[url][pageUrl] = {
         keywords: [...keywords],
         timestamp: Date.now()
       };
     }
 
     chrome.storage.local.set({ [storageKey]: allData }, () => {
-      console.log(`Saved/updated data for origin: ${origin}, URL: ${pageUrl}`);
+      console.log(`Saved/updated data for URL: ${url}, URL: ${pageUrl}`);
     });
   });
 }
 
-function getOriginFactors(origin, callback) {
+function getOriginFactors(url, callback) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
-    const originData = allFactors[origin] || null;
+    const originData = allFactors[url] || null;
 
     callback(originData);
   });
@@ -61,7 +49,7 @@ function getOriginFactors(origin, callback) {
 
 function checkForParameters() {
     const bodyText = document.body.innerHTML.toLowerCase();
-    getOriginFactors(origin, (factors) => {
+    getOriginFactors(url, (factors) => {
       if (factors) {
         if (factors.id == 1){
           uniqueParameters = uniqueParameters.concat([...new Set(
@@ -69,7 +57,7 @@ function checkForParameters() {
           )]);
 
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("id attributes: ", factors.id)
         }
         if (factors.class == 1){
@@ -79,7 +67,7 @@ function checkForParameters() {
               .filter(cls => cls)
           )]);
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("class attributes: ", factors.class)
         }
         if (factors.name == 1){
@@ -87,7 +75,7 @@ function checkForParameters() {
             Array.from(document.querySelectorAll('[name]')).map(el => el.getAttribute('name'))
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("name attributes: ", factors.name)
         }
         if (factors.href == 1){
@@ -103,12 +91,12 @@ function checkForParameters() {
             hrefs.flat()
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("href attributes: ", factors.href)
         }
         if (factors.src == 1){
           let srcs = Array.from(document.querySelectorAll('[src]')).map(el => {
-            if(el.getAttribute("src").startsWith("/") || el.getAttribute("src").startsWith(location.origin)){
+            if(el.getAttribute("src").startsWith("/") || el.getAttribute("src").startsWith(location.url)){
               let src = el.getAttribute("src").split("?")[1]
               if(src != undefined) src = src.split("&").map(item => item.split("=")[0])
               return src
@@ -119,7 +107,7 @@ function checkForParameters() {
             srcs.flat()
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("src attributes: ", factors.src)
         }
         
@@ -149,7 +137,7 @@ function checkForParameters() {
             }catch{}
             uniqueParameters = uniqueParameters.concat([...new Set(var_names.flat().concat(json_keys.flat()).concat(function_parameters.flat()))])
             uniqueParameters = [...new Set(uniqueParameters)]
-            saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+            saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
             // }
           });
         }
@@ -162,42 +150,42 @@ function checkForParameters() {
             location.search.split("?")[1].split("&").map(item => item.split("=")[0])
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("url attributes: ", factors.url)
         }
       }
     });
 }
 
-function getKeywordsByOrigin(origin, callback) {
+function getKeywordsByOrigin(url, callback) {
   if (!chrome.runtime?.id) {
     console.warn("Extension context is invalidated.");
     return;
   }
   chrome.storage.local.get("url_keywords", (data) => {
-    const all = data.keywords_by_origin || {};
+    const all = data.url_keywords || {};
 
-    const result = all[origin] || null;
+    const result = all[url] || null;
     callback(result);
   });
 }
 
-function getKeywordsByPageUrl(origin, pageUrl, callback) {
+function getKeywordsByPageUrl(url, pageUrl, callback) {
   const storageKey = 'url_keywords';
 
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};
 
-    if (!allData[origin]) {
-      console.warn(`Origin "${origin}" not found.`);
+    if (!allData[url]) {
+      console.warn(`Origin "${url}" not found.`);
       callback(null);
       return;
     }
 
-    const pageData = allData[origin][pageUrl];
+    const pageData = allData[url][pageUrl];
 
     if (!pageData) {
-      console.warn(`Page URL "${pageUrl}" not found under origin "${origin}".`);
+      console.warn(`Page URL "${pageUrl}" not found under URL "${url}".`);
       callback(null);
       return;
     }
@@ -210,9 +198,9 @@ function getKeywordsByPageUrl(origin, pageUrl, callback) {
 
 chrome.storage.local.get("urls", (result) => {
   const arr = result["urls"] || [];
-  if (arr.includes(origin)) {
+  if (arr.includes(url)) {
     const observer = new MutationObserver((e) => {
-        getKeywordsByPageUrl(origin, location.href.split("?")[0], (keywords) => {
+        getKeywordsByPageUrl(url, location.href.split("?")[0], (keywords) => {
           if (keywords) {
             chrome.runtime.sendMessage({ type: "setBadge", text: keywords.length.toString() });
           } else {

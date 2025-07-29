@@ -31,13 +31,13 @@ function openModal() {
   chrome.storage.local.get("url_keywords", (data) => {
     const all = data.url_keywords || {};
 
-    const result = all[getQueryParam("origin")] || null;
+    const result = all[getQueryParam("url")] || null;
     let fixed_value = document.getElementById("fixed-part").value
     Object.keys(result).map(key => {
         let keywords = result[key]['keywords']
-        if (key != `${getQueryParam("origin")}/`){
+        if (key != `${getQueryParam("url")}/`){
             try{
-              keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
+              keywords = keywords.concat(result[`${getQueryParam("url")}/`]['keywords'])
             }catch{}
         }
         keywords = [...new Set(keywords)]
@@ -77,13 +77,13 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
   chrome.storage.local.get("url_keywords", (data) => {
       const all = data.url_keywords || {};
 
-      const result = all[getQueryParam("origin")] || null;
+      const result = all[getQueryParam("url")] || null;
       let fixed_value = document.getElementById("fixed-part").value
       Object.keys(result).map(key => {
           let keywords = result[key]['keywords']
-          if (key != `${getQueryParam("origin")}/`){
+          if (key != `${getQueryParam("url")}/`){
             try{
-              keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
+              keywords = keywords.concat(result[`${getQueryParam("url")}/`]['keywords'])
             }catch{}
           }
           keywords = [...new Set(keywords)]

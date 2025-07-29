@@ -2,7 +2,7 @@ function getQueryParam(param) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
 }
-const hostname = getQueryParam("origin")
+const hostname = getQueryParam("url")
 
 function countUppercase(str) {
   const matches = str.match(/[A-Z]/g);
@@ -308,7 +308,7 @@ document.getElementById("addCustomParameterBtn").addEventListener("click", () =>
   if (customPrompt != null){
     customPrompt = customPrompt.split(",")
     customPrompt = customPrompt.map(item => item.trim())
-    saveKeywordsToOriginFactors(customPrompt, hostname + "/", hostname)
+    saveKeywordsToOriginFactors(customPrompt, hostname, hostname)
     location.reload()
   }
 })
