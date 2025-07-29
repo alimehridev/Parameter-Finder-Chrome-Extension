@@ -8,8 +8,16 @@ function remove_url_from_list(url){
     if(confirmation){
         chrome.storage.local.get(url_key_2, (result) => {
             if (!result[url_key_2] || result[url_key_2].length === 0) return;
-    
             const updated = result[url_key_2].filter((item) => item !== url);
+            chrome.storage.local.get("url_factors", (result) => { 
+                if(result['url_factors'][url]){
+                    console.log(result['url_factors'][url]) 
+                    delete result["url_factors"][url]
+                    chrome.storage.local.set({ ["url_factors"]: result["url_factors"] }, () => {
+                    });
+                }
+
+            })
             chrome.storage.local.set({ [url_key_2]: updated }, () => {
                 location.reload()
             });
