@@ -27,7 +27,6 @@ document.getElementById("addBtn").addEventListener("click", () => {
 
 getOriginFactors(hostname, (factors) => {
   if (factors) {
-    console.log("Factors for origin:", factors);
     document.getElementById("id").checked = factors.id
     document.getElementById("class").checked = factors.class
     document.getElementById("name").checked = factors.name
