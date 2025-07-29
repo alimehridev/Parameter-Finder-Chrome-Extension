@@ -3,9 +3,9 @@ if(hostname_addr == undefined){
     document.getElementsByClassName("origin_dashboard")[0].remove()
     document.getElementsByClassName("main_dashboard")[0].style.display = "block"
     if(location.href.split("origin_add=")[1]){
-        document.getElementById("originInput").value = decodeURIComponent(location.href.split("origin_add=")[1])
+        document.getElementById("urlInput").value = decodeURIComponent(location.href.split("origin_add=")[1])
     }
-    document.getElementById("originInput").focus()
+    document.getElementById("urlInput").focus()
 }else {
     document.getElementsByClassName("origin_dashboard")[0].style.display = "block"
     document.getElementsByClassName("main_dashboard")[0].remove()

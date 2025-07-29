@@ -65,7 +65,7 @@ function getKeywordsByOrigin(origin, callback) {
     console.warn("Extension context is invalidated.");
     return;
   }
-  chrome.storage.local.get("origin_url_keywords", (data) => {
+  chrome.storage.local.get("url_keywords", (data) => {
     const all = data.keywords_by_origin || {};
 
     const result = all[origin] || null;
@@ -81,7 +81,7 @@ function removeLogFunction(page, origin, pageURL, keyword){
 
 async function loadOriginData(origin) {
   document.getElementById("origin").textContent = `🔗 Origin: ${origin} (0)`;
-  const { origin_url_keywords: parameters_by_origin = {} } = await chrome.storage.local.get("origin_url_keywords");
+  const { url_keywords: parameters_by_origin = {} } = await chrome.storage.local.get("url_keywords");
   const pages = parameters_by_origin[origin] || {};
 
   const dataDiv = document.getElementById("data");
@@ -209,7 +209,7 @@ if (hostname) {
 }
 
 function clearOriginContent(origin) {
-  const key = "origin_url_keywords";
+  const key = "url_keywords";
 
   chrome.storage.local.get([key], (result) => {
     const data = result[key] || {};
@@ -238,7 +238,7 @@ document.getElementById("removeAllBtn").addEventListener("click", () => {
 function removeParameterFromOrigin(origin, keywordToRemove) {
   let confirmation = confirm("Are you sure ?")
   if (confirmation){
-    const key = "origin_url_keywords";
+    const key = "url_keywords";
     chrome.storage.local.get([key], (result) => {
       const data = result[key] || {};
 
@@ -273,7 +273,7 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
     return;
   }
 
-  const storageKey = 'origin_url_keywords';
+  const storageKey = 'url_keywords';
 
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};

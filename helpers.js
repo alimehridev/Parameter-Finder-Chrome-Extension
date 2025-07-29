@@ -6,8 +6,8 @@ function notifyBar(message) {
   };
 };
 function getOriginFactors(origin, callback) {
-  chrome.storage.local.get("origin_factors", (data) => {
-    const allFactors = data.origin_factors || {};
+  chrome.storage.local.get("url_factors", (data) => {
+    const allFactors = data.url_factors || {};
     const originData = allFactors[origin] || null;
 
     callback(originData);
@@ -15,8 +15,8 @@ function getOriginFactors(origin, callback) {
 }
 
 function storeOriginFactors(origin, factors) {
-  chrome.storage.local.get("origin_factors", (data) => {
-    const allFactors = data.origin_factors || {};
+  chrome.storage.local.get("url_factors", (data) => {
+    const allFactors = data.url_factors || {};
 
     allFactors[origin] = {
       id: factors.id,
@@ -29,7 +29,7 @@ function storeOriginFactors(origin, factors) {
       url: factors.url
     };
 
-    chrome.storage.local.set({ origin_factors: allFactors }, () => {
+    chrome.storage.local.set({ url_factors: allFactors }, () => {
       console.log(`Factors for ${origin} saved.`);
     });
   });

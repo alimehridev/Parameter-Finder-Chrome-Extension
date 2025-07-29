@@ -6,8 +6,8 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 });
 
 chrome.action.onClicked.addListener((tab) => {
-  chrome.storage.local.get("added_origins", (result) => {
-    const arr = result["added_origins"] || [];
+  chrome.storage.local.get("urls", (result) => {
+    const arr = result["urls"] || [];
       const origin = new URL(tab.url).origin;
       if (arr.includes(origin)) {
         const url = chrome.runtime.getURL("dashboard.html") + `?origin=${encodeURIComponent(origin)}`;

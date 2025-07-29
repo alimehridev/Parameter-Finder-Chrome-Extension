@@ -1,7 +1,7 @@
-const input = document.getElementById("originInput");
-const addOriginBtn = document.getElementById("addOriginBtn");
-const originList = document.getElementById("originList");
-const origin_key_2 = `added_origins`;
+const input = document.getElementById("urlInput");
+const addUrlBtn = document.getElementById("addUrlBtn");
+const urlList = document.getElementById("urlList");
+const origin_key_2 = `urls`;
 
 function remove_origin_from_list(li){
     const payload = li.firstChild.innerText
@@ -16,7 +16,7 @@ function remove_origin_from_list(li){
 }
 
 
-addOriginBtn.addEventListener("click", () => {
+addUrlBtn.addEventListener("click", () => {
     const value = input.value.trim();
     if (value === "") return;
 
@@ -32,7 +32,7 @@ addOriginBtn.addEventListener("click", () => {
     li.querySelector(".origin-remove-btn").addEventListener("click", () => {
         remove_origin_from_list(li)
     });
-    originList.appendChild(li);
+    urlList.appendChild(li);
     input.value = "";
 
     chrome.storage.local.get(origin_key_2, (result) => {
@@ -51,7 +51,7 @@ addOriginBtn.addEventListener("click", () => {
 
 // Optional: add keyword on Enter
 input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") addOriginBtn.click();
+    if (e.key === "Enter") addUrlBtn.click();
 });
 
 
@@ -71,7 +71,7 @@ chrome.storage.local.get(origin_key_2, (result) => {
         li.querySelector(".origin-remove-btn").addEventListener("click", () => {
             remove_origin_from_list(li)
         });
-        originList.appendChild(li);
+        urlList.appendChild(li);
     })
     
 });

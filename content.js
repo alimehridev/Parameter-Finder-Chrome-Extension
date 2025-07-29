@@ -20,7 +20,7 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
     return;
   }
 
-  const storageKey = 'origin_url_keywords';
+  const storageKey = 'url_keywords';
 
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};
@@ -51,8 +51,8 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
 }
 
 function getOriginFactors(origin, callback) {
-  chrome.storage.local.get("origin_factors", (data) => {
-    const allFactors = data.origin_factors || {};
+  chrome.storage.local.get("url_factors", (data) => {
+    const allFactors = data.url_factors || {};
     const originData = allFactors[origin] || null;
 
     callback(originData);
@@ -174,7 +174,7 @@ function getKeywordsByOrigin(origin, callback) {
     console.warn("Extension context is invalidated.");
     return;
   }
-  chrome.storage.local.get("origin_url_keywords", (data) => {
+  chrome.storage.local.get("url_keywords", (data) => {
     const all = data.keywords_by_origin || {};
 
     const result = all[origin] || null;
@@ -183,7 +183,7 @@ function getKeywordsByOrigin(origin, callback) {
 }
 
 function getKeywordsByPageUrl(origin, pageUrl, callback) {
-  const storageKey = 'origin_url_keywords';
+  const storageKey = 'url_keywords';
 
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};
@@ -208,8 +208,8 @@ function getKeywordsByPageUrl(origin, pageUrl, callback) {
 
 
 
-chrome.storage.local.get("added_origins", (result) => {
-  const arr = result["added_origins"] || [];
+chrome.storage.local.get("urls", (result) => {
+  const arr = result["urls"] || [];
   if (arr.includes(origin)) {
     const observer = new MutationObserver((e) => {
         getKeywordsByPageUrl(origin, location.href.split("?")[0], (keywords) => {

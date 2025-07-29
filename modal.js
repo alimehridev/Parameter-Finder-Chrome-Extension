@@ -28,8 +28,8 @@ function getQueryParam(param) {
 function openModal() {
   document.getElementById("output").textContent = ""
   document.getElementById("chunk-number").value = 20
-  chrome.storage.local.get("origin_url_keywords", (data) => {
-    const all = data.origin_url_keywords || {};
+  chrome.storage.local.get("url_keywords", (data) => {
+    const all = data.url_keywords || {};
 
     const result = all[getQueryParam("origin")] || null;
     let fixed_value = document.getElementById("fixed-part").value
@@ -74,8 +74,8 @@ document.getElementById("copyBtn").addEventListener("click", () => {
 
 document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
   document.getElementById("output").textContent = ""
-  chrome.storage.local.get("origin_url_keywords", (data) => {
-      const all = data.origin_url_keywords || {};
+  chrome.storage.local.get("url_keywords", (data) => {
+      const all = data.url_keywords || {};
 
       const result = all[getQueryParam("origin")] || null;
       let fixed_value = document.getElementById("fixed-part").value
