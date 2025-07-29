@@ -36,7 +36,19 @@ getOriginFactors(hostname, (factors) => {
     document.getElementById("js_inline").checked = factors.js_inline
     document.getElementById("json").checked = factors.json
     document.getElementById("url").checked = factors.url
-  } 
+    if(factors.id
+      && factors.class
+      && factors.name
+      && factors.href
+      && factors.src
+      && factors.js_inline
+      && factors.json
+      && factors.url
+    ){
+      document.getElementById("all").checked = true
+    }
+  }
+
 });
 
 
