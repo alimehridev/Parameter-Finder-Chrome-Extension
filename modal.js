@@ -26,6 +26,7 @@ function getQueryParam(param) {
   return urlParams.get(param);
 }
 function openModal() {
+  document.getElementById("output").textContent = ""
   chrome.storage.local.get("origin_url_keywords", (data) => {
     const all = data.origin_url_keywords || {};
 
@@ -44,10 +45,9 @@ function openModal() {
         keywords.forEach(chunk => {
             document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
         })
-    })
-    
-
-  });
+      })
+    document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
+});
   document.getElementById("myModal").style.display = "block";
 }
 
@@ -72,25 +72,35 @@ document.getElementById("copyBtn").addEventListener("click", () => {
 
 
 document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
-    document.getElementById("output").textContent = ""
-    chrome.storage.local.get("origin_url_keywords", (data) => {
-        const all = data.origin_url_keywords || {};
+  document.getElementById("output").textContent = ""
+  chrome.storage.local.get("origin_url_keywords", (data) => {
+      const all = data.origin_url_keywords || {};
 
-        const result = all[getQueryParam("origin")] || null;
-        let fixed_value = document.getElementById("fixed-part").value
-        Object.keys(result).map(key => {
-            let keywords = result[key]['keywords']
-            if (key != `${getQueryParam("origin")}/`){
-              try{
-                keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
-              }catch{}
-            }
-            keywords = [...new Set(keywords)]
-            let chunk = parseInt(document.getElementById("chunk-number").value)
-            keywords = chunkArrayInPairs(keywords, chunk)
-            keywords.forEach(chunk => {
-                document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
-            })
-        })
+      const result = all[getQueryParam("origin")] || null;
+      let fixed_value = document.getElementById("fixed-part").value
+      Object.keys(result).map(key => {
+          let keywords = result[key]['keywords']
+          if (key != `${getQueryParam("origin")}/`){
+            try{
+              keywords = keywords.concat(result[`${getQueryParam("origin")}/`]['keywords'])
+            }catch{}
+          }
+          keywords = [...new Set(keywords)]
+          let chunk = parseInt(document.getElementById("chunk-number").value)
+          keywords = chunkArrayInPairs(keywords, chunk)
+          keywords.forEach(chunk => {
+              document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
+          })
+      })
+      document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
   });
+})
+
+document.getElementById("output").addEventListener("click", () => {
+  document.getElementById("output").select()
+})
+
+document.getElementById("output").addEventListener("focus", () => {
+  
+  
 })
