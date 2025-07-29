@@ -66,6 +66,16 @@ document.getElementById("closeModalBtn").addEventListener("click", closeModal)
 document.getElementById("urlQueryGenBtn").addEventListener("click", openModal)
 
 
+document.getElementById("openBtn").addEventListener("click", () => {
+  let confirmation = confirm("Do you want to open all links ?")
+  if(confirmation){
+    let links = document.getElementById("output").textContent.split("\n")
+    links.forEach(url => {
+      window.open(url)
+    })
+  }
+})
+
 document.getElementById("copyBtn").addEventListener("click", () => {
   const text = document.getElementById("output").textContent
 

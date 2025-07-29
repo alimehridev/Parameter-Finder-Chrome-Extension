@@ -54,7 +54,9 @@
   height: 150px;
   resize: none;
 }
-.modal-content #copyBtn {
+
+
+.modal-content #copyBtn, .modal-content #openBtn {
     position: absolute;
     bottom: 45px;
     right: 40px;
@@ -66,6 +68,9 @@
 
 }
 
+.modal-content #openBtn {
+  bottom: 75px;
+}
 .modal-content .info-bar {
   display: flex;
   justify-content: end;
