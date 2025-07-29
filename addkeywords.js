@@ -21,11 +21,11 @@ document.getElementById("addBtn").addEventListener("click", () => {
         json: json_chkbox,
         url: url_chkbox
     }
-    storeOriginFactors(hostname, factors)
+    storeURLFactors(getQueryParam("url"), factors)
 })
 
 
-getOriginFactors(hostname, (factors) => {
+getURLFactors(getQueryParam("url"), (factors) => {
   if (factors) {
     document.getElementById("id").checked = factors.id
     document.getElementById("class").checked = factors.class

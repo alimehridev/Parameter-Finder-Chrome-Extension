@@ -2,7 +2,6 @@ function getQueryParam(param) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
 }
-const hostname = getQueryParam("url")
 
 function countUppercase(str) {
   const matches = str.match(/[A-Z]/g);
@@ -42,47 +41,24 @@ function entropy(str) {
   return result
 }
 
-function removeKeywordFromStorage(origin, href, keywordToRemove) {
-  chrome.storage.local.get("keywords_by_origin", (data) => {
-    const all = data.keywords_by_origin || {};
-    if (!all[origin] || !all[origin][href]) return;
-    all[origin][href] = all[origin][href].filter(
-      (kw) => kw !== keywordToRemove
-    );
-    if (all[origin][href].length === 0) {
-      delete all[origin][href];
-    }
-    if (Object.keys(all[origin]).length === 0) {
-      delete all[origin];
-    }
-    chrome.storage.local.set({ keywords_by_origin: all });
-  });
-}
 
-
-function getKeywordsByOrigin(origin, callback) {
+function getKeywordsByURL(url, callback) {
   if (!chrome.runtime?.id) {
     console.warn("Extension context is invalidated.");
     return;
   }
   chrome.storage.local.get("url_keywords", (data) => {
-    const all = data.keywords_by_origin || {};
+    const all = data.url_keywords || {};
 
-    const result = all[origin] || null;
+    const result = all[url] || null;
     callback(result);
   });
 }
 
-
-function removeLogFunction(page, origin, pageURL, keyword){
-  page.remove()
-  removeKeywordFromStorage(origin, pageURL, keyword)
-}
-
-async function loadOriginData(origin) {
-  document.getElementById("origin").textContent = `🔗 Origin: ${origin} (0)`;
-  const { url_keywords: parameters_by_origin = {} } = await chrome.storage.local.get("url_keywords");
-  const pages = parameters_by_origin[origin] || {};
+async function loadData(url) {
+  document.getElementById("urlLabel").textContent = `🔗 URL: ${url} (0)`;
+  const { url_keywords: parameters_by_url = {} } = await chrome.storage.local.get("url_keywords");
+  const pages = parameters_by_url[url] || {};
 
   const dataDiv = document.getElementById("data");
   dataDiv.innerHTML = "";
@@ -133,7 +109,7 @@ async function loadOriginData(origin) {
       let remove_log_btn = document.createElement("span")
       remove_log_btn.classList.add("removeLogBtn")
       remove_log_btn.addEventListener("click", () => {
-        removeParameterFromOrigin(hostname, keyword)
+        removeParameterFunction(getQueryParam("url"), keyword)
       })
       remove_log_btn.innerText = "x"
       pageDiv.appendChild(remove_log_btn)
@@ -142,7 +118,7 @@ async function loadOriginData(origin) {
     });
     
   });
-  document.getElementById("origin").textContent = `🔗 Origin: ${origin} (${counter})`;
+  document.getElementById("urlLabel").textContent = `🔗 URL: ${url} (${counter})`;
   let page_count = Math.ceil(len_keywords / per_page)
   let pagination_div = document.getElementsByClassName("pagination")[0]
   let page_range
@@ -204,24 +180,24 @@ async function loadOriginData(origin) {
   }
 }
 
-if (hostname) {
-  loadOriginData(hostname);
+if (getQueryParam("url")) {
+  loadData(getQueryParam("url"));
 }
 
-function clearOriginContent(origin) {
+function clearURLContent(url) {
   const key = "url_keywords";
 
   chrome.storage.local.get([key], (result) => {
     const data = result[key] || {};
 
-    if (data[origin]) {
-      data[origin] = {};  // محتوا رو پاک کن
+    if (data[url]) {
+      data[url] = {};
 
       chrome.storage.local.set({ [key]: data }, () => {
-        console.log(`Cleared content for origin: ${origin}`);
+        console.log(`Cleared content for URL: ${url}`);
       });
     } else {
-      console.log(`Origin ${origin} not found.`);
+      console.log(`Origin ${url} not found.`);
     }
   });
 }
@@ -229,35 +205,35 @@ function clearOriginContent(origin) {
 document.getElementById("removeAllBtn").addEventListener("click", () => {
   let confirmation = confirm("Are you sure ?")
   if(confirmation){
-    clearOriginContent(hostname)
+    clearURLContent(getQueryParam("url"))
     location.reload()
   }
 })
 
 
-function removeParameterFromOrigin(origin, keywordToRemove) {
+function removeParameterFunction(url, keywordToRemove) {
   let confirmation = confirm("Are you sure ?")
   if (confirmation){
     const key = "url_keywords";
     chrome.storage.local.get([key], (result) => {
       const data = result[key] || {};
 
-      if (!data[origin]) {
-        console.warn(`Origin '${origin}' not found.`);
+      if (!data[url]) {
+        console.warn(`URL '${url}' not found.`);
         return;
       }
 
-      Object.keys(data[origin]).forEach((url) => {
-        const keywords = data[origin][url]?.keywords;
+      Object.keys(data[url]).forEach((u) => {
+        const keywords = data[url][u]?.keywords;
         
         if (Array.isArray(keywords)) {
           const filtered = keywords.filter(kw => kw !== keywordToRemove);
-          data[origin][url].keywords = filtered;
+          data[url][u].keywords = filtered;
         }
       });
 
       chrome.storage.local.set({ [key]: data }, () => {
-        console.log(`Keyword '${keywordToRemove}' removed from all URLs under '${origin}'.`);
+        console.log(`Keyword '${keywordToRemove}' removed from all URLs under '${url}'.`);
       });
     });
     location.reload()
@@ -267,8 +243,8 @@ function removeParameterFromOrigin(origin, keywordToRemove) {
 
 
 
-function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
-  if (!Array.isArray(keywords) || !pageUrl || !origin) {
+function saveKeywordsToURLFactors(keywords, href, url) {
+  if (!Array.isArray(keywords) || !href || !url) {
     console.error("Invalid input");
     return;
   }
@@ -278,11 +254,11 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};
 
-    if (!allData[origin]) {
-      allData[origin] = {};
+    if (!allData[url]) {
+      allData[url] = {};
     }
 
-    const existingEntry = allData[origin][pageUrl];
+    const existingEntry = allData[url][href];
 
     if (existingEntry) {
       const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
@@ -291,14 +267,14 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
         existingEntry.timestamp = Date.now();
       }
     } else {
-      allData[origin][pageUrl] = {
+      allData[url][href] = {
         keywords: [...keywords],
         timestamp: Date.now()
       };
     }
 
     chrome.storage.local.set({ [storageKey]: allData }, () => {
-      console.log(`Saved/updated data for origin: ${origin}, URL: ${pageUrl}`);
+      console.log(`Saved/updated data for URL: ${url}, URL: ${href}`);
     });
   });
 }
@@ -308,7 +284,7 @@ document.getElementById("addCustomParameterBtn").addEventListener("click", () =>
   if (customPrompt != null){
     customPrompt = customPrompt.split(",")
     customPrompt = customPrompt.map(item => item.trim())
-    saveKeywordsToOriginFactors(customPrompt, hostname, hostname)
+    saveKeywordsToURLFactors(customPrompt, getQueryParam("url"), getQueryParam("url"))
     location.reload()
   }
 })

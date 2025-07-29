@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get("urls", (result) => {
     const arr = result["urls"] || [];
-      let url = new URL(tab.url).href;
+      let url = (new URL(tab.url).origin) + (new URL(tab.url).pathname);
       if (arr.includes(url)) {
         url = chrome.runtime.getURL("dashboard.html") + `?url=${encodeURIComponent(url)}`;
         chrome.tabs.create({ url });

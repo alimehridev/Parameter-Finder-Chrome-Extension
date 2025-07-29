@@ -1,9 +1,9 @@
-const url = location.href;
+const url = location.origin + location.pathname;
 let uniqueParameters = []
 
 
-function saveKeywordsToOriginFactors(keywords, pageUrl, url) {
-  if (!Array.isArray(keywords) || !pageUrl || !url) {
+function saveKeywordsToURLFactors(keywords, href, url) {
+  if (!Array.isArray(keywords) || !href || !url) {
     console.error("Invalid input");
     return;
   }
@@ -17,7 +17,7 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, url) {
       allData[url] = {};
     }
 
-    const existingEntry = allData[url][pageUrl];
+    const existingEntry = allData[url][href];
 
     if (existingEntry) {
       const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
@@ -26,30 +26,30 @@ function saveKeywordsToOriginFactors(keywords, pageUrl, url) {
         existingEntry.timestamp = Date.now();
       }
     } else {
-      allData[url][pageUrl] = {
+      allData[url][href] = {
         keywords: [...keywords],
         timestamp: Date.now()
       };
     }
 
     chrome.storage.local.set({ [storageKey]: allData }, () => {
-      console.log(`Saved/updated data for URL: ${url}, URL: ${pageUrl}`);
+      console.log(`Saved/updated data for URL: ${url}, URL: ${href}`);
     });
   });
 }
 
-function getOriginFactors(url, callback) {
+function getURLFactors(url, callback) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
-    const originData = allFactors[url] || null;
+    const urlData = allFactors[url] || null;
 
-    callback(originData);
+    callback(urlData);
   });
 }
 
 function checkForParameters() {
     const bodyText = document.body.innerHTML.toLowerCase();
-    getOriginFactors(url, (factors) => {
+    getURLFactors(url, (factors) => {
       if (factors) {
         if (factors.id == 1){
           uniqueParameters = uniqueParameters.concat([...new Set(
@@ -57,7 +57,7 @@ function checkForParameters() {
           )]);
 
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("id attributes: ", factors.id)
         }
         if (factors.class == 1){
@@ -67,7 +67,7 @@ function checkForParameters() {
               .filter(cls => cls)
           )]);
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("class attributes: ", factors.class)
         }
         if (factors.name == 1){
@@ -75,7 +75,7 @@ function checkForParameters() {
             Array.from(document.querySelectorAll('[name]')).map(el => el.getAttribute('name'))
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("name attributes: ", factors.name)
         }
         if (factors.href == 1){
@@ -88,26 +88,26 @@ function checkForParameters() {
             return undefined
           }).filter(item => item != undefined)
           uniqueParameters = uniqueParameters.concat([...new Set(
-            hrefs.flat()
-          )])
+            hrefs
+          )].flat())
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("href attributes: ", factors.href)
         }
         if (factors.src == 1){
           let srcs = Array.from(document.querySelectorAll('[src]')).map(el => {
-            if(el.getAttribute("src").startsWith("/") || el.getAttribute("src").startsWith(location.url)){
+            if(el.getAttribute("src").startsWith("/") || el.getAttribute("src").startsWith(location.origin)){
               let src = el.getAttribute("src").split("?")[1]
               if(src != undefined) src = src.split("&").map(item => item.split("=")[0])
               return src
             }
             return undefined
-          }).filter(item => item != undefined)
+          }).filter(item => item != undefined).flat()
           uniqueParameters = uniqueParameters.concat([...new Set(
-            srcs.flat()
-          )])
+            srcs
+          )].flat())
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("src attributes: ", factors.src)
         }
         
@@ -137,7 +137,7 @@ function checkForParameters() {
             }catch{}
             uniqueParameters = uniqueParameters.concat([...new Set(var_names.flat().concat(json_keys.flat()).concat(function_parameters.flat()))])
             uniqueParameters = [...new Set(uniqueParameters)]
-            saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
+            saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
             // }
           });
         }
@@ -150,14 +150,14 @@ function checkForParameters() {
             location.search.split("?")[1].split("&").map(item => item.split("=")[0])
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
           console.log("url attributes: ", factors.url)
         }
       }
     });
 }
 
-function getKeywordsByOrigin(url, callback) {
+function getKeywordsByURL(url, callback) {
   if (!chrome.runtime?.id) {
     console.warn("Extension context is invalidated.");
     return;
@@ -177,7 +177,7 @@ function getKeywordsByPageUrl(url, pageUrl, callback) {
     const allData = result[storageKey] || {};
 
     if (!allData[url]) {
-      console.warn(`Origin "${url}" not found.`);
+      console.warn(`URL "${url}" not found.`);
       callback(null);
       return;
     }

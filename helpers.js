@@ -5,20 +5,20 @@ function notifyBar(message) {
     });
   };
 };
-function getOriginFactors(origin, callback) {
+function getURLFactors(url, callback) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
-    const originData = allFactors[origin] || null;
+    const urlData = allFactors[url] || null;
 
-    callback(originData);
+    callback(urlData);
   });
 }
 
-function storeOriginFactors(origin, factors) {
+function storeURLFactors(url, factors) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
 
-    allFactors[origin] = {
+    allFactors[url] = {
       id: factors.id,
       class: factors.class,
       name: factors.name,
@@ -30,7 +30,7 @@ function storeOriginFactors(origin, factors) {
     };
 
     chrome.storage.local.set({ url_factors: allFactors }, () => {
-      console.log(`Factors for ${origin} saved.`);
+      console.log(`Factors for ${url} saved.`);
     });
   });
   notifyBar("Done.")
