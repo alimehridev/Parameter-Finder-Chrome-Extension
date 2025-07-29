@@ -15,10 +15,15 @@ function generateRandomString(length = 6) {
 }
 
 
-function buildQueryString(keys, fixed = "XXXXX") {
+function buildQueryString(keys, fixed = "XXXXX", url_encoding = true) {
+  if (url_encoding){
+    return keys
+      .map(key => `${encodeURIComponent(key)}=${fixed}-${generateRandomString(6)}`)
+      .join('&');
+  }
   return keys
-    .map(key => `${key}=${fixed}-${generateRandomString(6)}`)
-    .join('&');
+      .map(key => `${key}=${fixed}-${generateRandomString(6)}`)
+      .join('&');
 }
 
 function getQueryParam(param) {
@@ -44,8 +49,9 @@ function openModal() {
         let chunk = 20
         keywords = chunkArrayInPairs(keywords, chunk)
         key = (new URL(key)).origin + (new URL(key)).pathname
+        chunk_url_encoding = true
         keywords.forEach(chunk => {
-            document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
+            document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
         })
       })
     document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
@@ -91,8 +97,9 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
           let chunk = parseInt(document.getElementById("chunk-number").value)
           keywords = chunkArrayInPairs(keywords, chunk)
           key = (new URL(key)).origin + (new URL(key)).pathname
+          chunk_url_encoding = true
           keywords.forEach(chunk => {
-              document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
+              document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
           })
       })
       document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
