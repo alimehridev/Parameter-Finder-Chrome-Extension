@@ -2,4 +2,6 @@
 2. Add other filters: url, parameter, ...
 3. Sorting based on entropy
 6. Crawling Javascript files to find more parameters
-7. src, href attributes
+8. Check the head tag too, it is just checking body content.
+9. No hashtag or & in parameters name
+10. Select all options button in dashboard

@@ -312,3 +312,14 @@ document.getElementById("addCustomParameterBtn").addEventListener("click", () =>
     location.reload()
   }
 })
+
+document.getElementById("all").addEventListener("click", () => {
+  document.getElementById("id").checked = document.getElementById("all").checked
+  document.getElementById("class").checked = document.getElementById("all").checked
+  document.getElementById("name").checked = document.getElementById("all").checked
+  document.getElementById("href").checked = document.getElementById("all").checked
+  document.getElementById("src").checked = document.getElementById("all").checked
+  document.getElementById("js_inline").checked = document.getElementById("all").checked
+  document.getElementById("json").checked = document.getElementById("all").checked
+  document.getElementById("url").checked = document.getElementById("all").checked
+})
