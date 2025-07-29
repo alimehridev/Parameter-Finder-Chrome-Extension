@@ -27,6 +27,7 @@ function getQueryParam(param) {
 }
 function openModal() {
   document.getElementById("output").textContent = ""
+  document.getElementById("chunk-number").value = 20
   chrome.storage.local.get("origin_url_keywords", (data) => {
     const all = data.origin_url_keywords || {};
 
