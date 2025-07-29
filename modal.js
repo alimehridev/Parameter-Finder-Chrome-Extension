@@ -43,6 +43,7 @@ function openModal() {
         keywords = [...new Set(keywords)]
         let chunk = 20
         keywords = chunkArrayInPairs(keywords, chunk)
+        key = (new URL(key)).origin + (new URL(key)).pathname
         keywords.forEach(chunk => {
             document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
         })
@@ -89,6 +90,7 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
           keywords = [...new Set(keywords)]
           let chunk = parseInt(document.getElementById("chunk-number").value)
           keywords = chunkArrayInPairs(keywords, chunk)
+          key = (new URL(key)).origin + (new URL(key)).pathname
           keywords.forEach(chunk => {
               document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value)}\n` 
           })
