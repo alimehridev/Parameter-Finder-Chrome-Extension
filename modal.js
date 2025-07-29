@@ -49,7 +49,7 @@ function openModal() {
         let chunk = 20
         keywords = chunkArrayInPairs(keywords, chunk)
         key = (new URL(key)).origin + (new URL(key)).pathname
-        chunk_url_encoding = true
+        chunk_url_encoding = document.getElementById("urlencode-chbox").checked
         keywords.forEach(chunk => {
             document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
         })
@@ -97,7 +97,7 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
           let chunk = parseInt(document.getElementById("chunk-number").value)
           keywords = chunkArrayInPairs(keywords, chunk)
           key = (new URL(key)).origin + (new URL(key)).pathname
-          chunk_url_encoding = true
+          chunk_url_encoding = document.getElementById("urlencode-chbox").checked
           keywords.forEach(chunk => {
               document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
           })
