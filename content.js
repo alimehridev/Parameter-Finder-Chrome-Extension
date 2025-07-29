@@ -1,13 +1,5 @@
 const origin = location.origin;
 let uniqueParameters = []
-function isUnlikelyWebParam(param) {
-  if (param.length > 20 && !param.includes('_')) return true;
-  if (/^[a-zA-Z0-9]+$/.test(param) && param.length >= 8) {
-    const entropy = estimateEntropy(param);
-    if (entropy > 3.5) return true;
-  }
-  return false;
-}
 function estimateEntropy(str) {
   const freq = {};
   for (let char of str) {
@@ -21,8 +13,6 @@ function estimateEntropy(str) {
   }
   return entropy;
 }
-
-
 
 function saveKeywordsToOriginFactors(keywords, pageUrl, origin) {
   if (!Array.isArray(keywords) || !pageUrl || !origin) {
@@ -133,8 +123,35 @@ function checkForParameters() {
           console.log("src attributes: ", factors.src)
         }
         
-        if (factors.js == 1){
-          console.log("js: ", factors.js)
+        if (factors.js_inline == 1){
+          console.log("js: ", factors.js_inline)
+          const scripts = document.querySelectorAll("script");
+          scripts.forEach((script, index) => {
+            // if (script.src) {
+            //   if(script.src.startsWith(origin) || script.src.startsWith("/")){
+            //     if (isProbablyLibrary(script.src) == false){
+            //       console.log("[Script File]", script.src);
+            //     }
+            //   }
+            // } else {
+            script_content = script.textContent
+            let var_names = []
+            try{
+              var_names = script_content.match(/\b(?:var|let|const)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/g).map(item => item.split(" ")[1])
+            }catch{}
+            let json_keys = []
+            try{
+              json_keys = Object.keys(JSON.parse(script_content.match(/\{[\s\r\n]*"(?:[^"\\]|\\.)*"(?:[\s\S]*?)\}/g)))
+            }catch{}
+            let function_parameters = []
+            try{
+              function_parameters = script_content.match(/function\s*\w*\s*\(([^)]*)\)|(\w*\s*=\s*)?\(?\s*([^)=]*)\s*\)?\s*=>/g).map(item => item.match(/\(.*\)/g)[0].replace("(", "").replace(")", "").split(",").map(item => item.trim())).filter(item => item != "").flat()
+            }catch{}
+            uniqueParameters = uniqueParameters.concat([...new Set(var_names.flat().concat(json_keys.flat()).concat(function_parameters.flat()))])
+            uniqueParameters = [...new Set(uniqueParameters)]
+            saveKeywordsToOriginFactors(uniqueParameters, location.href.split("?")[0], origin)
+            // }
+          });
         }
         
         if (factors.json == 1){

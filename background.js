@@ -18,3 +18,13 @@ chrome.action.onClicked.addListener((tab) => {
       }
   });
 });
+
+
+// chrome.webRequest.onCompleted.addListener(
+//   function (details) {
+//     if (details.url.toLowerCase().endsWith(".js")) {
+//       console.log("[Network JS File]", details.method, details.url);
+//     }
+//   },
+//   { urls: ["<all_urls>"], types: ["script", "xmlhttprequest", "other"] }
+// );
