@@ -4,3 +4,4 @@
 8. Check the head tag too, it is just checking body content.
 9. No hashtag or & in parameters name
 10. make chunk_url_encoding as an option in chunk url generator modal
+11. Adding wildcard instead of absolute url
