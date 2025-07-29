@@ -18,6 +18,15 @@ function remove_url_from_list(url){
                 }
 
             })
+            chrome.storage.local.get("url_keywords", (result) => { 
+                if(result['url_keywords'][url]){
+                    console.log(result['url_keywords'][url]) 
+                    delete result["url_keywords"][url]
+                    chrome.storage.local.set({ ["url_keywords"]: result["url_keywords"] }, () => {
+                    });
+                }
+
+            })
             chrome.storage.local.set({ [url_key_2]: updated }, () => {
                 location.reload()
             });
