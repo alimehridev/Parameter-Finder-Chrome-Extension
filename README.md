@@ -38,7 +38,7 @@ A relatively powerful tool for discovering potential parameters from a web page.
 * [ ] Sorting based on entropy
 * [ ] Crawling Javascript files to find more parameters
 * [ ] Check the head tag too, it is just checking body content.
-* [ ] Adding wildcard instead of absolute url
+* [x] Adding wildcard instead of absolute url
 
 ## 🧑‍💻 Author
 
