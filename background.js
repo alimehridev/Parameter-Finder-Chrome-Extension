@@ -27,7 +27,7 @@ function matchAnyPattern(patterns, str, returnValue = false) {
 
 
 chrome.runtime.onInstalled.addListener(() => {
-  const top_parameters = ["q","s","search","id","lang","keyword","query","page","keywords","year","view","email","type","name","p","month","image","list_type","url","terms","categoryid","key","login","begindate","enddate"]
+  const top_parameters = ["redirectTo", "redirectUrl", "redirectURL", "redirect_url", "redirect_to", "q","s","search","id","lang","keyword","query","page","keywords","year","view","email","type","name","p","month","image","list_type","url","terms","categoryid","key","login","begindate","enddate"]
 
   chrome.storage.local.set({"top_parameters": top_parameters}, () => {
   });
