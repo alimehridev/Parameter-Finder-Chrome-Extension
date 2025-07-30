@@ -41,23 +41,26 @@ function openModal() {
       const results = all[url] || null;
       let fixed_value = document.getElementById("fixed-part").value
       Object.keys(results).map(key => {
+        if(!key.includes("*")){
           let keywords = results[key]['keywords']
-          if (key != `${getQueryParam("url")}/`){
+          if (key != `${url}`){
               try{
-                keywords = keywords.concat(results[`${getQueryParam("url")}/`]['keywords'])
+                // keywords = keywords.concat(results[`${getQueryParam("url")}/`]['keywords'])
+                keywords = keywords.concat(results[`${url}`]['keywords'])
               }catch{}
           }
           keywords = [...new Set(keywords)]
           let chunk = 20
           keywords = chunkArrayInPairs(keywords, chunk)
           key = (new URL(key)).origin + (new URL(key)).pathname
-          chunk_url_encoding = document.getElementById("urlencode-chbox").checked
+          let chunk_url_encoding = document.getElementById("urlencode-chbox").checked
           keywords.forEach(chunk => {
               document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
-          })
+            })
+          }
         })
-    })
-    document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
+        document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("\n").length - 1} links`
+      })
 });
   document.getElementById("myModal").style.display = "block";
 }
@@ -74,7 +77,9 @@ document.getElementById("openBtn").addEventListener("click", () => {
   if(confirmation){
     let links = document.getElementById("output").textContent.split("\n")
     links.forEach(url => {
-      window.open(url)
+      if(url != ""){
+        window.open(url)
+      }
     })
   }
 })
@@ -103,23 +108,44 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
         const results = all[url] || null;
         let fixed_value = document.getElementById("fixed-part").value
         Object.keys(results).map(key => {
+          if(!key.includes("*")){
             let keywords = results[key]['keywords']
-            if (key != `${url}/`){
+            if (key != `${url}`){
               try{
-                keywords = keywords.concat(results[`${url}/`]['keywords'])
+                keywords = keywords.concat(results[`${url}`]['keywords'])
               }catch{}
             }
-            keywords = [...new Set(keywords)]
-            let chunk = parseInt(document.getElementById("chunk-number").value)
-            keywords = chunkArrayInPairs(keywords, chunk)
-            key = (new URL(key)).origin + (new URL(key)).pathname
-            chunk_url_encoding = document.getElementById("urlencode-chbox").checked
-            keywords.forEach(chunk => {
-                document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
-            })
+            let topxss_chbox = document.getElementById("topxss-chbox").checked
+            if (topxss_chbox) {
+              chrome.storage.local.get("top_parameters", (result) => { 
+                let top_parameters = result['top_parameters']
+                keywords = keywords.concat(top_parameters)
+                keywords = [...new Set(keywords)]
+                let chunk = parseInt(document.getElementById("chunk-number").value)
+                keywords = chunkArrayInPairs(keywords, chunk)
+                key = (new URL(key)).origin + (new URL(key)).pathname
+                let chunk_url_encoding = document.getElementById("urlencode-chbox").checked
+                
+                keywords.forEach(chunk => {
+                    document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+                })
+                document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("\n").length - 1} links`
+              })
+            }else{
+              keywords = [...new Set(keywords)]
+              let chunk = parseInt(document.getElementById("chunk-number").value)
+              keywords = chunkArrayInPairs(keywords, chunk)
+              key = (new URL(key)).origin + (new URL(key)).pathname
+              let chunk_url_encoding = document.getElementById("urlencode-chbox").checked
+              
+              keywords.forEach(chunk => {
+                  document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+              })
+              document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("\n").length - 1} links`
+            }
+          }
         })
       })
-      document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
   });
 })
 
