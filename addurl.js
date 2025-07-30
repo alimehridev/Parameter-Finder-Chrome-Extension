@@ -37,11 +37,7 @@ function remove_url_from_list(url){
 addUrlBtn.addEventListener("click", () => {
     const dataDiv = document.getElementById("data");
     let value = input.value.trim();
-    if(!value.endsWith("/")) {value = value + "/"}
     if (value === "") return;
-
-    
-
     chrome.storage.local.get(url_key_2, (result) => {
         const arr = result[url_key_2] || [];
         

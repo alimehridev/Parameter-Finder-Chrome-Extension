@@ -36,7 +36,7 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get("urls", (result) => {
     const arr = result["urls"] || [];
       let url = (new URL(tab.url).origin) + (new URL(tab.url).pathname);
-      if (arr.includes(url)) {
+      if (arr.includes(url) || arr.includes((url.split("")[url.split("").length - 1] === "/" ? url.slice(0, -1) : url))) {
         url = chrome.runtime.getURL("dashboard.html") + `?url=${encodeURIComponent(url)}`;
         chrome.tabs.create({ url });
       }else{

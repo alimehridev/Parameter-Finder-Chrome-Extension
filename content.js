@@ -198,7 +198,7 @@ function getKeywordsByPageUrl(url, pageUrl, callback) {
 
 chrome.storage.local.get("urls", (result) => {
   const arr = result["urls"] || [];
-  if (arr.includes(url)) {
+  if (arr.includes(url) || arr.includes((url.split("")[url.split("").length - 1] === "/" ? url.slice(0, -1) : url))) {
     const observer = new MutationObserver((e) => {
         getKeywordsByPageUrl(url, location.href.split("?")[0], (keywords) => {
           if (keywords) {
