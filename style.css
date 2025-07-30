@@ -216,9 +216,31 @@ input:checked + .slider:before {
   color: white;
   text-align: center;
 }
-.keyword {
+.page .keyword {
   max-width: 199px;
-  overflow: hidden;
+  overflow-wrap: anywhere;
+  flex: 1;
+  display: flex;
+  justify-content: start;
+}
+.page .keyword div {
+  width: fit-content;
+  background: #eee;
+  display: inline-block;
+  overflow-wrap: anywhere;
+  display: flex;
+  justify-content: start;
+}
+.ent-percentage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.page .anchors {
+  flex: 1;
+  
+  display: flex;
+  justify-content: center;
 }
 .removeLogBtn {
   transition: all 0.2s;

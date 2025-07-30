@@ -55,69 +55,80 @@ function getKeywordsByURL(url, callback) {
   });
 }
 
+function findUrlsWithKeyword(data, keyword) {
+  const result = [];
+  for (const url in data) {
+    const keywords = data[url].keywords || [];
+    if (keywords.includes(keyword)) {
+      result.push(url);
+    }
+  }
+  return result;
+}
+
 async function loadData(url) {
   document.getElementById("urlLabel").textContent = `🔗 URL: ${url} (0)`;
   const { url_keywords: parameters_by_url = {} } = await chrome.storage.local.get("url_keywords");
   const pages = parameters_by_url[url] || {};
-
+  
   const dataDiv = document.getElementById("data");
   dataDiv.innerHTML = "";
   let counter = 0
   let len_keywords = 0
   let per_page = 5
+  let all_keywords = []
   let current_page = getQueryParam("page") ? getQueryParam("page") : 1
   await Object.entries(pages).forEach(([url, keywords]) => {
-    len_keywords = keywords['keywords'].length
+      len_keywords = keywords['keywords'].length
+      all_keywords = all_keywords.concat(keywords['keywords'])  
+  });
+  all_keywords = [...new Set(all_keywords)]
+  all_keywords.forEach(keyword => {
+    let ent = parseInt((80 - (entropy(keyword) * 20)) * 2)
+    if(!(counter >= (current_page - 1) * per_page) || !(counter < (current_page * per_page))){
+      counter++
+      return
+    }
+    const pageDiv = document.createElement("div");
+    pageDiv.className = "page";
 
-    keywords['keywords'].forEach(keyword => {
+    const kwDiv = document.createElement("div");
+    kwDiv.className = "keyword";
+    const kw = document.createElement("div");
 
-      let ent = parseInt((80 - (entropy(keyword) * 20)) * 2)
-      if(keyword.length > 15){
-        len_keywords -= 1
-        return
-      }
-      ent = ent <= 0 ? 0 : (ent >= 100 ? 100 : ent)
-      if (ent == 0){
-        len_keywords -= 1
-        return
-      }
-      if(!(counter >= (current_page - 1) * per_page) || !(counter < (current_page * per_page))){
-        counter++
-        return
-      }
-      const pageDiv = document.createElement("div");
-      pageDiv.className = "page";
-
-      const kw = document.createElement("div");
-      kw.className = "keyword";
-
-      const entPercentage = document.createElement("span")
-      entPercentage.classList.add("ent-percentage")
-      entPercentage.innerText = `(${ent}%)`
-      kw.textContent = keyword;
-      pageDiv.appendChild(kw);
-      pageDiv.appendChild(entPercentage)
-      const title = document.createElement("strong");
-      const anchor = document.createElement("a")
+    const entPercentage = document.createElement("span")
+    entPercentage.classList.add("ent-percentage")
+    entPercentage.innerText = `(${ent}%)`
+    kw.textContent = keyword;
+    kwDiv.appendChild(kw)
+    pageDiv.appendChild(kwDiv);
+    pageDiv.appendChild(entPercentage)
+    const title = document.createElement("strong");
+    let urls = findUrlsWithKeyword(pages, keyword)
+    let anchors = document.createElement("div")
+    anchors.classList.add("anchors")
+    urls.forEach(url => {
+      let anchor = document.createElement("a")
       anchor.classList.add("url-anchor")
       anchor.href = url
       anchor.target = "_blank"
       anchor.innerText = "[link]"
-      title.appendChild(anchor)
-      pageDiv.appendChild(title);
-      
-      let remove_log_btn = document.createElement("span")
-      remove_log_btn.classList.add("removeLogBtn")
-      remove_log_btn.addEventListener("click", () => {
-        removeParameterFunction(getQueryParam("url"), keyword)
-      })
-      remove_log_btn.innerText = "x"
-      pageDiv.appendChild(remove_log_btn)
-      dataDiv.appendChild(pageDiv);
-      counter++
-    });
+      anchors.appendChild(anchor)
+    })
+    pageDiv.appendChild(anchors);
+    pageDiv.appendChild(title);
     
+    let remove_log_btn = document.createElement("span")
+    remove_log_btn.classList.add("removeLogBtn")
+    remove_log_btn.addEventListener("click", () => {
+      removeParameterFunction(getQueryParam("url"), keyword)
+    })
+    remove_log_btn.innerText = "x"
+    pageDiv.appendChild(remove_log_btn)
+    dataDiv.appendChild(pageDiv);
+    counter++
   });
+  len_keywords = all_keywords.length
   document.getElementById("urlLabel").textContent = `🔗 URL: ${url} (${counter})`;
   let page_count = Math.ceil(len_keywords / per_page)
   let pagination_div = document.getElementsByClassName("pagination")[0]
@@ -181,7 +192,10 @@ async function loadData(url) {
 }
 
 if (getQueryParam("url")) {
-  loadData(getQueryParam("url"));
+  chrome.storage.local.get("urls", (result) => {
+    const arr = result["urls"] || [];
+    loadData(matchAnyPattern(arr, getQueryParam("url"), true))
+  })
 }
 
 function clearURLContent(url) {
@@ -205,8 +219,12 @@ function clearURLContent(url) {
 document.getElementById("removeAllBtn").addEventListener("click", () => {
   let confirmation = confirm("Are you sure ?")
   if(confirmation){
-    clearURLContent(getQueryParam("url"))
-    location.reload()
+    chrome.storage.local.get("urls", (result) => {
+        const arr = result["urls"] || [];
+        url = matchAnyPattern(arr, getQueryParam("url"), true)
+        clearURLContent(url)
+        location.reload()
+    })
   }
 })
 
@@ -217,26 +235,29 @@ function removeParameterFunction(url, keywordToRemove) {
     const key = "url_keywords";
     chrome.storage.local.get([key], (result) => {
       const data = result[key] || {};
-
-      if (!data[url]) {
-        console.warn(`URL '${url}' not found.`);
-        return;
-      }
-
-      Object.keys(data[url]).forEach((u) => {
-        const keywords = data[url][u]?.keywords;
-        
-        if (Array.isArray(keywords)) {
-          const filtered = keywords.filter(kw => kw !== keywordToRemove);
-          data[url][u].keywords = filtered;
+      chrome.storage.local.get("urls", (result) => {
+        const arr = result["urls"] || [];
+        url = matchAnyPattern(arr, url, true)
+        if (!data[url]) {
+          console.warn(`URL '${url}' not found.`);
+          return;
         }
-      });
-
-      chrome.storage.local.set({ [key]: data }, () => {
-        console.log(`Keyword '${keywordToRemove}' removed from all URLs under '${url}'.`);
-      });
+  
+        Object.keys(data[url]).forEach((u) => {
+          const keywords = data[url][u]?.keywords;
+          
+          if (Array.isArray(keywords)) {
+            const filtered = keywords.filter(kw => kw !== keywordToRemove);
+            data[url][u].keywords = filtered;
+          }
+        });
+  
+        chrome.storage.local.set({ [key]: data }, () => {
+          console.log(`Keyword '${keywordToRemove}' removed from all URLs under '${url}'.`);
+        });
+        location.reload()
+      })
     });
-    location.reload()
   }
 }
 
@@ -253,29 +274,29 @@ function saveKeywordsToURLFactors(keywords, href, url) {
 
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, url, true)
 
-    if (!allData[url]) {
-      allData[url] = {};
-    }
-
-    const existingEntry = allData[url][href];
-
-    if (existingEntry) {
-      const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
-      if (newKeywords.length > 0) {
-        existingEntry.keywords.push(...newKeywords);
-        existingEntry.timestamp = Date.now();
+      const existingEntry = allData[url][href];
+  
+      if (existingEntry) {
+        const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
+        if (newKeywords.length > 0) {
+          existingEntry.keywords.push(...newKeywords);
+          existingEntry.timestamp = Date.now();
+        }
+      } else {
+        allData[url][href] = {
+          keywords: [...keywords],
+          timestamp: Date.now()
+        };
       }
-    } else {
-      allData[url][href] = {
-        keywords: [...keywords],
-        timestamp: Date.now()
-      };
-    }
-
-    chrome.storage.local.set({ [storageKey]: allData }, () => {
-      console.log(`Saved/updated data for URL: ${url}, URL: ${href}`);
-    });
+  
+      chrome.storage.local.set({ [storageKey]: allData }, () => {
+        console.log(`Saved/updated data for URL: ${url}, URL: ${href}`);
+      });
+    })
   });
 }
 
@@ -284,8 +305,12 @@ document.getElementById("addCustomParameterBtn").addEventListener("click", () =>
   if (customPrompt != null){
     customPrompt = customPrompt.split(",")
     customPrompt = customPrompt.map(item => item.trim())
-    saveKeywordsToURLFactors(customPrompt, getQueryParam("url"), getQueryParam("url"))
-    location.reload()
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, getQueryParam("url"), true)
+      saveKeywordsToURLFactors(customPrompt, url, url)
+      location.reload()
+    })
   }
 })
 

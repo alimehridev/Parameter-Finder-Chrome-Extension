@@ -38,10 +38,11 @@ addUrlBtn.addEventListener("click", () => {
     const dataDiv = document.getElementById("data");
     let value = input.value.trim();
     if (value === "") return;
+
     chrome.storage.local.get(url_key_2, (result) => {
         const arr = result[url_key_2] || [];
         
-        if (!arr.includes(value)) {
+        if (!arr.includes(value) && !arr.includes((value.split("")[value.split("").length - 1] === "/" ? value.slice(0, -1) : value) + "/")) {
             arr.push(value);
             const pageDiv = document.createElement("div");
             pageDiv.className = "page";

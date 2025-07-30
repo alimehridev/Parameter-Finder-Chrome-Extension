@@ -8,30 +8,37 @@ function notifyBar(message) {
 function getURLFactors(url, callback) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
-    const urlData = allFactors[url] || null;
-
-    callback(urlData);
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, url, true)
+      const urlData = allFactors[url] || null;
+  
+      callback(urlData);
+    })
   });
 }
 
 function storeURLFactors(url, factors) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
-
-    allFactors[url] = {
-      id: factors.id,
-      class: factors.class,
-      name: factors.name,
-      href: factors.href,
-      src: factors.src,
-      js_inline: factors.js_inline,
-      json: factors.json,
-      url: factors.url
-    };
-
-    chrome.storage.local.set({ url_factors: allFactors }, () => {
-      console.log(`Factors for ${url} saved.`);
-    });
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, url, true)
+      allFactors[url] = {
+        id: factors.id,
+        class: factors.class,
+        name: factors.name,
+        href: factors.href,
+        src: factors.src,
+        js_inline: factors.js_inline,
+        json: factors.json,
+        url: factors.url
+      };
+  
+      chrome.storage.local.set({ url_factors: allFactors }, () => {
+        console.log(`Factors for ${url} saved.`);
+      });
+    })
   });
   notifyBar("Done.")
 }

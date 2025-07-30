@@ -35,25 +35,28 @@ function openModal() {
   document.getElementById("chunk-number").value = 20
   chrome.storage.local.get("url_keywords", (data) => {
     const all = data.url_keywords || {};
-
-    const result = all[getQueryParam("url")] || null;
-    let fixed_value = document.getElementById("fixed-part").value
-    Object.keys(result).map(key => {
-        let keywords = result[key]['keywords']
-        if (key != `${getQueryParam("url")}/`){
-            try{
-              keywords = keywords.concat(result[`${getQueryParam("url")}/`]['keywords'])
-            }catch{}
-        }
-        keywords = [...new Set(keywords)]
-        let chunk = 20
-        keywords = chunkArrayInPairs(keywords, chunk)
-        key = (new URL(key)).origin + (new URL(key)).pathname
-        chunk_url_encoding = document.getElementById("urlencode-chbox").checked
-        keywords.forEach(chunk => {
-            document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, getQueryParam("url"), true)
+      const results = all[url] || null;
+      let fixed_value = document.getElementById("fixed-part").value
+      Object.keys(results).map(key => {
+          let keywords = results[key]['keywords']
+          if (key != `${getQueryParam("url")}/`){
+              try{
+                keywords = keywords.concat(results[`${getQueryParam("url")}/`]['keywords'])
+              }catch{}
+          }
+          keywords = [...new Set(keywords)]
+          let chunk = 20
+          keywords = chunkArrayInPairs(keywords, chunk)
+          key = (new URL(key)).origin + (new URL(key)).pathname
+          chunk_url_encoding = document.getElementById("urlencode-chbox").checked
+          keywords.forEach(chunk => {
+              document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+          })
         })
-      })
+    })
     document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
 });
   document.getElementById("myModal").style.display = "block";
@@ -93,24 +96,28 @@ document.getElementById("urlQueryReGenBtn").addEventListener("click", () => {
   document.getElementById("output").textContent = ""
   chrome.storage.local.get("url_keywords", (data) => {
       const all = data.url_keywords || {};
-
-      const result = all[getQueryParam("url")] || null;
-      let fixed_value = document.getElementById("fixed-part").value
-      Object.keys(result).map(key => {
-          let keywords = result[key]['keywords']
-          if (key != `${getQueryParam("url")}/`){
-            try{
-              keywords = keywords.concat(result[`${getQueryParam("url")}/`]['keywords'])
-            }catch{}
-          }
-          keywords = [...new Set(keywords)]
-          let chunk = parseInt(document.getElementById("chunk-number").value)
-          keywords = chunkArrayInPairs(keywords, chunk)
-          key = (new URL(key)).origin + (new URL(key)).pathname
-          chunk_url_encoding = document.getElementById("urlencode-chbox").checked
-          keywords.forEach(chunk => {
-              document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
-          })
+      
+      chrome.storage.local.get("urls", (result) => {
+        const arr = result["urls"] || [];
+        url = matchAnyPattern(arr, getQueryParam("url"), true)
+        const results = all[url] || null;
+        let fixed_value = document.getElementById("fixed-part").value
+        Object.keys(results).map(key => {
+            let keywords = results[key]['keywords']
+            if (key != `${url}/`){
+              try{
+                keywords = keywords.concat(results[`${url}/`]['keywords'])
+              }catch{}
+            }
+            keywords = [...new Set(keywords)]
+            let chunk = parseInt(document.getElementById("chunk-number").value)
+            keywords = chunkArrayInPairs(keywords, chunk)
+            key = (new URL(key)).origin + (new URL(key)).pathname
+            chunk_url_encoding = document.getElementById("urlencode-chbox").checked
+            keywords.forEach(chunk => {
+                document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+            })
+        })
       })
       document.getElementsByClassName("links-number")[0].innerText = `${document.getElementById("output").textContent.split("https://").length} links`
   });

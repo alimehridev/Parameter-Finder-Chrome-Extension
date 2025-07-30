@@ -7,43 +7,50 @@ function saveKeywordsToURLFactors(keywords, href, url) {
     console.error("Invalid input");
     return;
   }
-
-  const storageKey = 'url_keywords';
-
-  chrome.storage.local.get([storageKey], (result) => {
-    const allData = result[storageKey] || {};
-
-    if (!allData[url]) {
-      allData[url] = {};
-    }
-
-    const existingEntry = allData[url][href];
-
-    if (existingEntry) {
-      const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
-      if (newKeywords.length > 0) {
-        existingEntry.keywords.push(...newKeywords);
-        existingEntry.timestamp = Date.now();
+  chrome.storage.local.get("urls", (result) => {
+    const arr = result["urls"] || [];
+    url = matchAnyPattern(arr, url, true)
+    const storageKey = 'url_keywords';
+  
+    chrome.storage.local.get([storageKey], (result) => {
+      const allData = result[storageKey] || {};
+  
+      if (!allData[url]) {
+        allData[url] = {};
       }
-    } else {
-      allData[url][href] = {
-        keywords: [...keywords],
-        timestamp: Date.now()
-      };
-    }
-
-    chrome.storage.local.set({ [storageKey]: allData }, () => {
-      console.log(`Saved/updated data for URL: ${url}, URL: ${href}`);
+  
+      const existingEntry = allData[url][href];
+  
+      if (existingEntry) {
+        const newKeywords = keywords.filter(kw => !existingEntry.keywords.includes(kw));
+        if (newKeywords.length > 0) {
+          existingEntry.keywords.push(...newKeywords);
+          existingEntry.timestamp = Date.now();
+        }
+      } else {
+        allData[url][href] = {
+          keywords: [...keywords],
+          timestamp: Date.now()
+        };
+      }
+  
+      chrome.storage.local.set({ [storageKey]: allData }, () => {
+        console.log(`Saved/updated data for URL: ${url}, URL: ${href}`);
+      });
     });
-  });
+  })
 }
 
 function getURLFactors(url, callback) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
-    const urlData = allFactors[url] || null;
-
-    callback(urlData);
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, url, true)
+      const urlData = allFactors[url] || null;
+  
+      callback(urlData);
+    })
   });
 }
 
@@ -175,22 +182,25 @@ function getKeywordsByPageUrl(url, pageUrl, callback) {
 
   chrome.storage.local.get([storageKey], (result) => {
     const allData = result[storageKey] || {};
-
-    if (!allData[url]) {
-      console.warn(`URL "${url}" not found.`);
-      callback(null);
-      return;
-    }
-
-    const pageData = allData[url][pageUrl];
-
-    if (!pageData) {
-      console.warn(`Page URL "${pageUrl}" not found under URL "${url}".`);
-      callback(null);
-      return;
-    }
-
-    callback(pageData.keywords || []);
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, url, true)
+      if (!allData[url]) {
+        console.warn(`URL "${url}" not found.`);
+        callback(null);
+        return;
+      }
+  
+      const pageData = allData[url][pageUrl];
+  
+      if (!pageData) {
+        console.warn(`Page URL "${pageUrl}" not found under URL "${url}".`);
+        callback(null);
+        return;
+      }
+  
+      callback(pageData.keywords || []);
+    })
   });
 }
 
@@ -198,7 +208,7 @@ function getKeywordsByPageUrl(url, pageUrl, callback) {
 
 chrome.storage.local.get("urls", (result) => {
   const arr = result["urls"] || [];
-  if (arr.includes(url) || arr.includes((url.split("")[url.split("").length - 1] === "/" ? url.slice(0, -1) : url))) {
+  if (matchAnyPattern(arr, url)) {
     const observer = new MutationObserver((e) => {
         getKeywordsByPageUrl(url, location.href.split("?")[0], (keywords) => {
           if (keywords) {
