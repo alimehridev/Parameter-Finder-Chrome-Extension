@@ -43,6 +43,7 @@ A relatively powerful tool for discovering potential parameters from a web page.
 ## 🧑‍💻 Author
 
 * Ali Mehri – [@alimehridev](https://github.com/alimehridev)
+* [Telegram Channel](https://t.me/memoriesofahacker)
 
 ## 📄 License
 
