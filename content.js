@@ -58,19 +58,21 @@ function checkForParameters() {
     const bodyText = document.body.innerHTML.toLowerCase();
     getURLFactors(url, (factors) => {
       if (factors) {
-        uniqueParameters = uniqueParameters.concat(
-          [...
-            new Set(
-              bodyText.match(/(?:https?:\/\/[^\s"'<>]+)|(?:\/[^\s"'<>]+)/g)
-                .filter(i => i.includes("?"))
-                .map(i => i.split("?")[1])
-                .map(i => i.split("&amp;"))
-                .flat()
-                .map(i => i.split("=")[0])
-              )
-          ]
-        )
-        saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+        try{
+          uniqueParameters = uniqueParameters.concat(
+            [...
+              new Set(
+                bodyText.match(/(?:https?:\/\/[^\s"'<>]+)|(?:\/[^\s"'<>]+)/g)
+                  .filter(i => i.includes("?"))
+                  .map(i => i.split("?")[1])
+                  .map(i => i.split("&amp;"))
+                  .flat()
+                  .map(i => i.split("=")[0])
+                )
+            ]
+          )
+          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+        }catch{}
 
         if (factors.id == 1){
           uniqueParameters = uniqueParameters.concat([...new Set(
