@@ -136,7 +136,7 @@ function checkForParameters() {
             }catch{}
             let json_keys = []
             try{
-              json_keys = Object.keys(JSON.parse(script_content.match(/\{[\s\r\n]*"(?:[^"\\]|\\.)*"(?:[\s\S]*?)\}/g)))
+              json_keys = scripts[28].textContent.match(/["|']([\w\-]+)["|']\s*?:/g).map(i => i.split('"')[1])
             }catch{}
             let function_parameters = []
             try{

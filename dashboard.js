@@ -326,8 +326,7 @@ document.getElementById("all").addEventListener("click", () => {
 })
 
 document.getElementById("copyAllBtn").addEventListener("click", (el) => {
-  let last_innerText = el.target.innerText
-  el.target.innerText = "Copying..."
+  el.target.innerText = "Processing..."
   chrome.storage.local.get("url_keywords", (data) => {
     const all = data.url_keywords || {};
     chrome.storage.local.get("urls", (result) => {
@@ -337,7 +336,7 @@ document.getElementById("copyAllBtn").addEventListener("click", (el) => {
       navigator.clipboard.writeText([...new Set(Object.values(results).map(i => i.keywords).flat())].sort().join("\n"))
       el.target.innerText = "Copied"
       setTimeout(() => {
-        el.target.innerText = last_innerText
+        el.target.innerText = "Copy all to clipboard"
       }, 500)
     })
   })
