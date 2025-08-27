@@ -122,30 +122,20 @@ function checkForParameters() {
           console.log("js: ", factors.js_inline)
           const scripts = document.querySelectorAll("script");
           scripts.forEach((script, index) => {
-            // if (script.src) {
-            //   if(script.src.startsWith(origin) || script.src.startsWith("/")){
-            //     if (isProbablyLibrary(script.src) == false){
-            //       console.log("[Script File]", script.src);
-            //     }
-            //   }
-            // } else {
             script_content = script.textContent
-            let var_names = []
+            let founded = []
             try{
-              var_names = script_content.match(/\b(?:var|let|const)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/g).map(item => item.split(" ")[1])
+              founded = founded.concat(script_content.match(/\b(?:var|let|const)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/g).map(item => item.split(" ")[1]))
             }catch{}
-            let json_keys = []
             try{
-              json_keys = scripts[28].textContent.match(/["|']([\w\-]+)["|']\s*?:/g).map(i => i.split('"')[1])
+              founded = founded.concat(script_content.match(/["|']([\w\-]+)["|']\s*?:/g).map(i => i.split('"')[1]))
             }catch{}
-            let function_parameters = []
             try{
-              function_parameters = script_content.match(/function\s*\w*\s*\(([^)]*)\)|(\w*\s*=\s*)?\(?\s*([^)=]*)\s*\)?\s*=>/g).map(item => item.match(/\(.*\)/g)[0].replace("(", "").replace(")", "").split(",").map(item => item.trim())).filter(item => item != "").flat()
+              founded = founded.concat(script_content.match(/function\s*\w*\s*\(([^)]*)\)|(\w*\s*=\s*)?\(?\s*([^)=]*)\s*\)?\s*=>/g).map(item => item.match(/\(.*\)/g)[0].replace("(", "").replace(")", "").split(",").map(item => item.trim())).filter(item => item != "").flat())
             }catch{}
-            uniqueParameters = uniqueParameters.concat([...new Set(var_names.flat().concat(json_keys.flat()).concat(function_parameters.flat()))])
+            uniqueParameters = uniqueParameters.concat([...new Set(founded)])
             uniqueParameters = [...new Set(uniqueParameters)]
             saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
-            // }
           });
         }
         

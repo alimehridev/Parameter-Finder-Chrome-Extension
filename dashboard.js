@@ -16,30 +16,6 @@ function countNumbers(str) {
   return matches ? matches.length : 0;
 }
 
-function entropy(str) {
-  str.split("_").length == 2 ? str = str.replaceAll("_", "") : str = str
-  str.split("-").length == 2 ? str = str.replaceAll("-", "") : str = str
-  const len = str.length
-
-  // Build a frequency map from the string.
-  const frequencies = Array.from(str)
-    .reduce((freq, c) => (freq[c] = (freq[c] || 0) + 1) && freq, {})
-
-  // Sum the frequency of each character.
-  let result = Object.values(frequencies)
-    .reduce((sum, f) => sum - f/len * Math.log2(f/len), 0)
-  const uppercase_ltr = countUppercase(str)
-  const lowercase_ltr = countLowercase(str)
-  const numbers_count = countNumbers(str)
-  if(((len/2) - 1 <= uppercase_ltr) && (len/2) - 1 <= lowercase_ltr){
-    result += 0.5
-  }
-  if(numbers_count > uppercase_ltr + lowercase_ltr){
-    result += 0.5
-  }
-
-  return result
-}
 
 
 function getKeywordsByURL(url, callback) {
@@ -84,7 +60,6 @@ async function loadData(url) {
   });
   all_keywords = [...new Set(all_keywords)]
   all_keywords.forEach(keyword => {
-    let ent = parseInt((80 - (entropy(keyword) * 20)) * 2)
     if(!(counter >= (current_page - 1) * per_page) || !(counter < (current_page * per_page))){
       counter++
       return
@@ -96,13 +71,9 @@ async function loadData(url) {
     kwDiv.className = "keyword";
     const kw = document.createElement("div");
 
-    const entPercentage = document.createElement("span")
-    entPercentage.classList.add("ent-percentage")
-    entPercentage.innerText = `(${ent}%)`
     kw.textContent = keyword;
     kwDiv.appendChild(kw)
     pageDiv.appendChild(kwDiv);
-    pageDiv.appendChild(entPercentage)
     const title = document.createElement("strong");
     let urls = findUrlsWithKeyword(pages, keyword)
     let anchors = document.createElement("div")
