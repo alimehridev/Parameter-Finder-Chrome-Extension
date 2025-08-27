@@ -35,9 +35,10 @@ A relatively powerful tool for discovering potential parameters from a web page.
 
 * [ ] Add export/import functionality
 * [ ] Add other filters: url, parameter, ...
+* [ ] Sorting based on entropy
 * [ ] Crawling Javascript files to find more parameters
 * [ ] Check the head tag too, it is just checking body content.
-* [x] Adding wildcard instead of absolute url
+* [ ] Adding wildcard instead of absolute url
 
 ## 🧑‍💻 Author
 
