@@ -58,7 +58,7 @@ input[type="text"] {
     cursor: pointer;
     transition: background-color 0.2s;
 }
-#addBtn, #addUrlBtn, #urlQueryGenBtn, #removeAllBtn, #urlQueryReGenBtn {
+#addBtn, #addUrlBtn, #urlQueryGenBtn, #removeAllBtn, #urlQueryReGenBtn, #copyAllBtn {
     padding: 10px 15px;
     border: none;
     background-color: #4CAF50;
@@ -74,15 +74,20 @@ input[type="text"] {
 }
 #removeAllBtn {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 5px;
   background-color: #ff0000;
+}
+#copyAllBtn {
+  width: 100%;
+  margin-top: 5px;
+  background-color: #0051ff;
 }
 #urlQueryGenBtn {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 5px;
   background-color: #af3333;
 }
-#addBtn:hover, #addUrlBtn:hover, #urlQueryReGenBtn:hover, #urlQueryGenBtn:hover, #removeAllBtn:hover, #discovered_parameters_header span:hover {
+#addBtn:hover, #copyAllBtn:hover, #addUrlBtn:hover, #urlQueryReGenBtn:hover, #urlQueryGenBtn:hover, #removeAllBtn:hover, #discovered_parameters_header span:hover {
     background-color: #45a049;
 }
 

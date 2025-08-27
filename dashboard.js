@@ -324,3 +324,21 @@ document.getElementById("all").addEventListener("click", () => {
   document.getElementById("json").checked = document.getElementById("all").checked
   document.getElementById("url").checked = document.getElementById("all").checked
 })
+
+document.getElementById("copyAllBtn").addEventListener("click", (el) => {
+  let last_innerText = el.target.innerText
+  el.target.innerText = "Copying..."
+  chrome.storage.local.get("url_keywords", (data) => {
+    const all = data.url_keywords || {};
+    chrome.storage.local.get("urls", (result) => {
+      const arr = result["urls"] || [];
+      url = matchAnyPattern(arr, getQueryParam("url"), true)
+      const results = all[url] || null;
+      navigator.clipboard.writeText([...new Set(Object.values(results).map(i => i.keywords).flat())].sort().join("\n"))
+      el.target.innerText = "Copied"
+      setTimeout(() => {
+        el.target.innerText = last_innerText
+      }, 500)
+    })
+  })
+})
