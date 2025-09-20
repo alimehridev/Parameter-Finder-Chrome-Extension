@@ -300,6 +300,7 @@ document.getElementById("all").addEventListener("click", () => {
   document.getElementById("js_inline").checked = document.getElementById("all").checked
   document.getElementById("json").checked = document.getElementById("all").checked
   document.getElementById("url").checked = document.getElementById("all").checked
+  document.getElementById("js_crawler").checked = document.getElementById("all").checked
 })
 
 document.getElementById("copyAllBtn").addEventListener("click", (el) => {

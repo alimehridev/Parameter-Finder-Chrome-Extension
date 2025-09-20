@@ -155,6 +155,10 @@ function checkForParameters() {
           });
         }
         
+        if (factors.js_crawler == 1){
+          console.log("json attributes: ", factors.json)
+        }
+        
         if (factors.json == 1){
           console.log("json attributes: ", factors.json)
         }

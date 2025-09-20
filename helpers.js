@@ -32,7 +32,8 @@ function storeURLFactors(url, factors) {
         src: factors.src,
         js_inline: factors.js_inline,
         json: factors.json,
-        url: factors.url
+        url: factors.url,
+        js_crawler: factors.js_crawler
       };
   
       chrome.storage.local.set({ url_factors: allFactors }, () => {

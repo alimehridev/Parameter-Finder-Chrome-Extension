@@ -11,6 +11,7 @@ document.getElementById("addBtn").addEventListener("click", () => {
     let js_inline_chkbox = +document.getElementById("js_inline").checked
     let json_chkbox = +document.getElementById("json").checked
     let url_chkbox = +document.getElementById("url").checked
+    let js_crawler = +document.getElementById("js_crawler").checked
     let factors = {
         id: id_chkbox,
         class: class_chkbox,
@@ -19,7 +20,8 @@ document.getElementById("addBtn").addEventListener("click", () => {
         src: src_chkbox,
         js_inline: js_inline_chkbox,
         json: json_chkbox,
-        url: url_chkbox
+        url: url_chkbox,
+        js_crawler: js_crawler
     }
     storeURLFactors(getQueryParam("url"), factors)
 })
@@ -35,6 +37,8 @@ getURLFactors(getQueryParam("url"), (factors) => {
     document.getElementById("js_inline").checked = factors.js_inline
     document.getElementById("json").checked = factors.json
     document.getElementById("url").checked = factors.url
+    document.getElementById("js_crawler").checked = factors.js_crawler
+
     if(factors.id
       && factors.class
       && factors.name
@@ -43,6 +47,7 @@ getURLFactors(getQueryParam("url"), (factors) => {
       && factors.js_inline
       && factors.json
       && factors.url
+      && factors.js_crawler
     ){
       document.getElementById("all").checked = true
     }

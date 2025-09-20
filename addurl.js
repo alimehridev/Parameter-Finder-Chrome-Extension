@@ -50,7 +50,8 @@ addUrlBtn.addEventListener("click", () => {
                     src: 1,
                     js_inline: 1,
                     json: 1,
-                    url: 1
+                    url: 1,
+                    js_crawler: 1
                 }
                 storeURLFactors(value, factors)
 
