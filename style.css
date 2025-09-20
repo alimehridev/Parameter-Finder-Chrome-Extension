@@ -300,3 +300,16 @@ input:checked + .slider:before {
   text-align: center;
   align-items: center;
 }
+
+
+.js_cralwer_settings {
+  background-image: url(assets/setting2.png);
+  width: 23px;
+  height: 23px;
+  background-size: contain;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.js_cralwer_settings:hover {
+  transform: scale(1.1);
+}
