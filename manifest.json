@@ -3,7 +3,7 @@
   "name": "DOM Parameter Finder",
   "version": "1.0",
   "description": "Find keywords and parameters in page DOM",
-  "permissions": ["storage", "scripting"],
+  "permissions": ["storage", "scripting", "tabs"],
   "host_permissions": ["<all_urls>"],
   "icons": {
       "16": "./assets/icon16.png",

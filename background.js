@@ -45,13 +45,21 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get("urls", (result) => {
     const arr = result["urls"] || [];
     let url = (new URL(tab.url).origin) + (new URL(tab.url).pathname);
-    if (matchAnyPattern(arr, url)) {
-      url = chrome.runtime.getURL("dashboard.html") + `?url=${encodeURIComponent(url)}`;
-      chrome.tabs.create({ url });
-    }else{
-      url = chrome.runtime.getURL("dashboard.html") + `?url_add=${encodeURIComponent(url)}`;
-      chrome.tabs.create({ url });
-    }
+    chrome.tabs.query({}, (tabs) => {
+      const existingTab = tabs.find(tab => tab.url && (tab.url.includes(chrome.runtime.id + `/dashboard.html?url=${encodeURIComponent(url)}`) || tab.url.includes(chrome.runtime.id + `/dashboard.html?url_add=${encodeURIComponent(url)}`) ));
+      if(existingTab){
+        chrome.tabs.update(existingTab.id, { active: true });
+        chrome.windows.update(existingTab.windowId, { focused: true });
+      }else {
+        if (matchAnyPattern(arr, url)) {
+          url = chrome.runtime.getURL("dashboard.html") + `?url=${encodeURIComponent(url)}`;
+          chrome.tabs.create({ url });
+        }else{
+          url = chrome.runtime.getURL("dashboard.html") + `?url_add=${encodeURIComponent(url)}`;
+          chrome.tabs.create({ url });
+        }
+      }
+    })
   });
 });
 
