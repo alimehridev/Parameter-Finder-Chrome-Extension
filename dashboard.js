@@ -232,7 +232,13 @@ function removeParameterFunction(url, keywordToRemove) {
   }
 }
 
-
+document.querySelector(".recycleBtn").addEventListener("click", () => {
+  const confirmation = confirm("Are you sure ?")
+  if(confirmation){
+      remove_url_from_list(getQueryParam("url"))
+      location.href = "dashboard.html"
+  }
+})
 
 
 function saveKeywordsToURLFactors(keywords, href, url) {

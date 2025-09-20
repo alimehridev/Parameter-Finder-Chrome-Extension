@@ -4,34 +4,31 @@ const urlList = document.getElementById("urlList");
 const url_key_2 = `urls`;
 
 function remove_url_from_list(url){
-    const confirmation = confirm("Are you sure ?")
-    if(confirmation){
-        chrome.storage.local.get("urls", (result) => {
-            if (!result["urls"] || result["urls"].length === 0) return;
-            const updated = result["urls"].filter((item) => item !== url);
-            chrome.storage.local.get("url_factors", (result) => { 
-                if(result['url_factors'][url]){
-                    console.log(result['url_factors'][url]) 
-                    delete result["url_factors"][url]
-                    chrome.storage.local.set({ ["url_factors"]: result["url_factors"] }, () => {
-                    });
-                }
+    chrome.storage.local.get("urls", (result) => {
+        if (!result["urls"] || result["urls"].length === 0) return;
+        const updated = result["urls"].filter((item) => item !== url);
+        chrome.storage.local.get("url_factors", (result) => { 
+            if(result['url_factors'][url]){
+                console.log(result['url_factors'][url]) 
+                delete result["url_factors"][url]
+                chrome.storage.local.set({ ["url_factors"]: result["url_factors"] }, () => {
+                });
+            }
 
-            })
-            chrome.storage.local.get("url_keywords", (result) => { 
-                if(result['url_keywords'][url]){
-                    console.log(result['url_keywords'][url]) 
-                    delete result["url_keywords"][url]
-                    chrome.storage.local.set({ ["url_keywords"]: result["url_keywords"] }, () => {
-                    });
-                }
+        })
+        chrome.storage.local.get("url_keywords", (result) => { 
+            if(result['url_keywords'][url]){
+                console.log(result['url_keywords'][url]) 
+                delete result["url_keywords"][url]
+                chrome.storage.local.set({ ["url_keywords"]: result["url_keywords"] }, () => {
+                });
+            }
 
-            })
-            chrome.storage.local.set({ ["urls"]: updated }, () => {
-                location.reload()
-            });
+        })
+        chrome.storage.local.set({ ["urls"]: updated }, () => {
+            location.reload()
         });
-    }
+    });
 }
 
 addUrlBtn.addEventListener("click", () => {
@@ -96,7 +93,10 @@ chrome.storage.local.get("urls", (result) => {
         let remove_url_btn = document.createElement("span")
         remove_url_btn.classList.add("removeLogBtn")
         remove_url_btn.addEventListener("click", () => {
-            remove_url_from_list(item)
+            const confirmation = confirm("Are you sure ?")
+            if(confirmation){
+                remove_url_from_list(item)
+            }
         })
         remove_url_btn.innerText = "x"
         pageDiv.appendChild(remove_url_btn)

@@ -58,6 +58,17 @@ input[type="text"] {
     cursor: pointer;
     transition: background-color 0.2s;
 }
+.recycleBtn {
+  background-image: url(/assets/remove-icon.png);
+  width: 27px;
+  height: 27px;
+  background-size: contain;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.recycleBtn:hover {
+  transform: scale(1.1);
+}
 #addBtn, #addUrlBtn, #urlQueryGenBtn, #removeAllBtn, #urlQueryReGenBtn, #copyAllBtn {
     padding: 10px 15px;
     border: none;
