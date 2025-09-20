@@ -6,9 +6,9 @@ const url_key_2 = `urls`;
 function remove_url_from_list(url){
     const confirmation = confirm("Are you sure ?")
     if(confirmation){
-        chrome.storage.local.get(url_key_2, (result) => {
-            if (!result[url_key_2] || result[url_key_2].length === 0) return;
-            const updated = result[url_key_2].filter((item) => item !== url);
+        chrome.storage.local.get("urls", (result) => {
+            if (!result["urls"] || result["urls"].length === 0) return;
+            const updated = result["urls"].filter((item) => item !== url);
             chrome.storage.local.get("url_factors", (result) => { 
                 if(result['url_factors'][url]){
                     console.log(result['url_factors'][url]) 
@@ -27,7 +27,7 @@ function remove_url_from_list(url){
                 }
 
             })
-            chrome.storage.local.set({ [url_key_2]: updated }, () => {
+            chrome.storage.local.set({ ["urls"]: updated }, () => {
                 location.reload()
             });
         });
@@ -35,45 +35,24 @@ function remove_url_from_list(url){
 }
 
 addUrlBtn.addEventListener("click", () => {
-    const dataDiv = document.getElementById("data");
     let value = input.value.trim();
     if (value === "") return;
 
-    chrome.storage.local.get(url_key_2, (result) => {
-        const arr = result[url_key_2] || [];
+    chrome.storage.local.get("urls", (result) => {
+        const arr = result["urls"] || [];
         
         if (!arr.includes(value) && !arr.includes((value.split("")[value.split("").length - 1] === "/" ? value.slice(0, -1) : value) + "/")) {
             arr.push(value);
-            const pageDiv = document.createElement("div");
-            pageDiv.className = "page";
-            const kw = document.createElement("div");
-            kw.className = "keyword";
-            const a = document.createElement("a")
-            a.href = `?url=${value}`
-            a.innerText = value
-            a.style.color = "initial"
-            kw.appendChild(a);
-            pageDiv.appendChild(kw)
-
-            let remove_url_btn = document.createElement("span")
-            remove_url_btn.classList.add("removeLogBtn")
-            remove_url_btn.addEventListener("click", () => {
-                remove_url_from_list(value)
-            })
-            remove_url_btn.innerText = "x"
-            pageDiv.appendChild(remove_url_btn)
-
-            dataDiv.appendChild(pageDiv)
             input.value = "";
+            chrome.storage.local.set({ ["urls"]: arr }, () => {
+                location.reload()
+            });
         }else {
-            input.value = "";
             alert(`${value} exists`)
             return
         }
 
-        chrome.storage.local.set({ [url_key_2]: arr }, () => {
-            console.log("Added:", value);
-        });
+        
     });
 
 });
@@ -87,9 +66,10 @@ input.addEventListener("keydown", (e) => {
 
 const dataDiv = document.getElementById("data");
 dataDiv.innerHTML = "";
-chrome.storage.local.get(url_key_2, (result) => {
-    if (!result[url_key_2] || result[url_key_2].length === 0) return;
-    result[url_key_2].forEach((item) => { 
+chrome.storage.local.get("urls", (result) => {
+    if (!result["urls"] || result["urls"].length === 0) return;
+    result["urls"].reverse()
+    result["urls"].forEach((item) => { 
         const pageDiv = document.createElement("div");
         pageDiv.className = "page";
         const kw = document.createElement("div");
