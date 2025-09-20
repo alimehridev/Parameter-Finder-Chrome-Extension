@@ -41,8 +41,26 @@ function findUrlsWithKeyword(data, keyword) {
   }
   return result;
 }
+function collectAllLinks(obj) {
+  let allLinks = [];
+  for (const key in obj) {
+    if (obj[key].links && Array.isArray(obj[key].links)) {
+      allLinks = allLinks.concat(obj[key].links);
+    }
+  }
+  return allLinks;
+}
 
 async function loadData(url) {
+  chrome.storage.local.get("js_links", (result) => {
+      const arr = result["js_links"] || [];
+      if(!arr){
+        document.getElementById("found_js_files_count").textContent = `Javascript files crawler (0 file(s))`
+        return
+      }
+      let links = collectAllLinks(arr[url])
+      document.getElementById("found_js_files_count").textContent = `Javascript files crawler (${links.length} file(s))`
+  })
   document.getElementById("urlLabel").textContent = `🔗 URL: ${url} (0)`;
   const { url_keywords: parameters_by_url = {} } = await chrome.storage.local.get("url_keywords");
   const pages = parameters_by_url[url] || {};
@@ -160,6 +178,7 @@ async function loadData(url) {
         }
       })
   }
+
 }
 
 if (getQueryParam("url")) {
