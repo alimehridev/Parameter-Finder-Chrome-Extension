@@ -198,14 +198,18 @@ function checkForParameters() {
             let src = el.getAttribute("src")
             if(src.startsWith("//")){
               return "https://" + src.replace("//", "")
+              // return ("https://" + src.replace("//", "")).split("?")[0]
             }else if(src.startsWith("https:")) {
               return src
+              // return src.split("?")[0]
             }else if(src.startsWith("/")){
               return location.origin + src
+              // return (location.origin + src).split("?")[0]
             }else if(src.startsWith("chrome-extension://")){
               return undefined
             }else {
               return location.href.endsWith("/") ? location.href + src : location.href + "/" + src
+              // return location.href.endsWith("/") ? (location.href + src).split("?")[0] : (location.href + "/" + src).split("?")[0]
             }
           }).filter(src => src != undefined)
           saveJavascriptFilesURL(srcs, location.href.split("?")[0], url)

@@ -58,7 +58,7 @@ async function loadData(url) {
         document.getElementById("found_js_files_count").textContent = `Javascript files crawler (0 file(s))`
         return
       }
-      document.getElementById("found_js_files_count").textContent = `Javascript files crawler (${arr[matchAnyPattern(Object.keys(arr), url, true)][url]['links'].length} file(s))`
+      document.getElementById("found_js_files_count").textContent = `Javascript files crawler (${arr[matchAnyPattern(Object.keys(arr), getQueryParam("url"), true)][getQueryParam("url")]['links'].length} file(s))`
   })
   document.getElementById("urlLabel").textContent = `🔗 URL: ${url} (0)`;
   const { url_keywords: parameters_by_url = {} } = await chrome.storage.local.get("url_keywords");
