@@ -57,7 +57,7 @@ addUrlBtn.addEventListener("click", () => {
                 }
                 storeURLFactors(value, factors)
 
-                location.reload()
+                location.href = `dashboard.html?url=${value}`
             });
         }else {
             alert(`${value} exists`)
