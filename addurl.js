@@ -45,6 +45,18 @@ addUrlBtn.addEventListener("click", () => {
             arr.push(value);
             input.value = "";
             chrome.storage.local.set({ ["urls"]: arr }, () => {
+                let factors = {
+                    id: 1,
+                    class: 1,
+                    name: 1,
+                    href: 1,
+                    src: 1,
+                    js_inline: 1,
+                    json: 1,
+                    url: 1
+                }
+                storeURLFactors(value, factors)
+
                 location.reload()
             });
         }else {
