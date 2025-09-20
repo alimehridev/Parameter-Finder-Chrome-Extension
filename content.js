@@ -41,6 +41,44 @@ function saveKeywordsToURLFactors(keywords, href, url) {
   })
 }
 
+function saveJavascriptFilesURL(links, href, url){
+  if (!Array.isArray(links) || !href || !url) {
+    console.error("Invalid input");
+    return;
+  }
+  chrome.storage.local.get("urls", (result) => {
+    const arr = result["urls"] || [];
+    url = matchAnyPattern(arr, url, true)
+    const storageKey = 'js_links';
+  
+    chrome.storage.local.get([storageKey], (result) => {
+      const allData = result[storageKey] || {};
+  
+      if (!allData[url]) {
+        allData[url] = {};
+      }
+  
+      const existingEntry = allData[url][href];
+  
+      if (existingEntry) {
+        const newLink = links.filter(link => !existingEntry.links.includes(link));
+        if (newLink.length > 0) {
+          existingEntry.links.push(...newLink);
+          existingEntry.timestamp = Date.now();
+        }
+      } else {
+        allData[url][href] = {
+          links: [...links],
+          timestamp: Date.now()
+        };
+      }
+  
+      chrome.storage.local.set({ [storageKey]: allData }, () => {
+      });
+    });
+  })
+}
+
 function getURLFactors(url, callback) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};
@@ -156,7 +194,19 @@ function checkForParameters() {
         }
         
         if (factors.js_crawler == 1){
-          console.log("json attributes: ", factors.json)
+          let srcs = Array.from(document.querySelectorAll('script[src]')).map(el => {
+            let src = el.getAttribute("src")
+            if(src.startsWith("/")){
+              return location.origin + "/" + src
+            }else if(src.startsWith("https:")) {
+              return src
+            }else if(src.startsWith("//")){
+              return "https://" + src.replace("//", "")
+            }else {
+              return location.href.endsWith("/") ? location.href + src : location.href + "/" + src
+            }
+          })
+          saveJavascriptFilesURL(srcs, location.href.split("?")[0], url)
         }
         
         if (factors.json == 1){
