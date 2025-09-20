@@ -63,6 +63,12 @@ chrome.action.onClicked.addListener((tab) => {
   });
 });
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if(message.type == "js_link_finder"){
+    console.log('پیام دریافت شد:', message);
+  }
+});
+
 
 // chrome.webRequest.onCompleted.addListener(
 //   function (details) {

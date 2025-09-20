@@ -55,7 +55,7 @@ function getURLFactors(url, callback) {
 }
 
 function checkForParameters() {
-    const bodyText = document.body.innerHTML.toLowerCase();
+    const bodyText = document.documentElement.outerHTML.toLowerCase();
     getURLFactors(url, (factors) => {
       if (factors) {
         try{
@@ -224,6 +224,7 @@ chrome.storage.local.get("urls", (result) => {
           }
         });
         checkForParameters();
+        // chrome.runtime.sendMessage({type: "js_link_finder", text: document.innerHTML})
     });
 
     observer.observe(document.body, {
