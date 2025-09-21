@@ -59,7 +59,7 @@ input[type="text"] {
     transition: background-color 0.2s;
 }
 .recycleBtn {
-  background-image: url(/assets/remove-icon.png);
+  background-image: url(/assets/images/remove-icon.png);
   width: 27px;
   height: 27px;
   background-size: contain;
@@ -303,7 +303,7 @@ input:checked + .slider:before {
 
 
 .js_cralwer_settings {
-  background-image: url(assets/setting2.png);
+  background-image: url(/assets/images/setting2.png);
   width: 23px;
   height: 23px;
   background-size: contain;
