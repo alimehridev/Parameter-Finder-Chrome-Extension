@@ -302,7 +302,7 @@ input:checked + .slider:before {
 }
 
 
-.js_cralwer_settings {
+.js_crawler_settings {
   background-image: url(/assets/images/setting2.png);
   width: 23px;
   height: 23px;
@@ -310,6 +310,6 @@ input:checked + .slider:before {
   cursor: pointer;
   transition: all 0.2s;
 }
-.js_cralwer_settings:hover {
+.js_crawler_settings:hover {
   transform: scale(1.1);
 }

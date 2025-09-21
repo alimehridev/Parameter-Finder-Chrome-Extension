@@ -8,6 +8,7 @@
   <script src="assets/js/beautify.js"></script>
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/modal.css">
+  <link rel="stylesheet" href="assets/css/js_crawler_modal.css">
   <body>
 
     <script src="assets/js/helpers.js"></script>
@@ -110,7 +111,7 @@
                 Javascript files crawler (0 file(s))
               </span>
             </div>
-            <div class="js_cralwer_settings"></div>
+            <div class="js_crawler_settings"></div>
           </div>
           <button id="addBtn">Save</button>
         </div>
@@ -167,10 +168,33 @@
       </div>
     </div>
 
+
+      <!-- The Modal -->
+      <div id="jsCrawlerModal" class="jsModal">
+        <!-- Modal content -->
+        <div class="jsModal-content">
+          <span class="jsModal-close">&times;</span>
+          <div class="jsModal-body">
+            <h2>Javascript links</h2>
+            <div class="js_link_container">
+              
+            </div>
+            <div class="js_numbers">
+              <span class="links_number">0 javascript links</span>
+              <span class="delimited">|</span>
+              <span class="selected_number">0 links selected</span>
+              <span class="select_all_links_btn">Select None</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     <script src="assets/js/modal.js"></script>
     <script src="assets/js/dashboard.js"></script>
     <script src="assets/js/addkeywords.js"></script>
     <script src="assets/js/js_parameter_finder.js"></script>
+    <script src="assets/js/js_crawler_modal.js"></script>
     <script src="assets/js/dash_checker.js"></script>
 </body>
 </html>

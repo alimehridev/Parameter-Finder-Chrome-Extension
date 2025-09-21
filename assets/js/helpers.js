@@ -85,3 +85,20 @@ function matchAnyPattern(patterns, str, returnValue = false) {
   }
   return false;
 }
+
+function shortenToXChars(str, x=100) {
+  const maxLength = x;
+  const dots = '...';
+
+  if (str.length <= maxLength) {
+    return str;
+  }
+
+  const keepLength = maxLength - dots.length;
+  const half = Math.floor(keepLength / 2);
+  
+  const start = str.slice(0, half);
+  const end = str.slice(str.length - (keepLength - half));
+
+  return start + dots + end;
+}

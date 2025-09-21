@@ -1,0 +1,108 @@
+
+.jsModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+
+.jsModal-content {
+  background-color: #fefefe;
+  margin: 7% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 650px;
+}
+
+.jsModal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.jsModal-close:hover,
+.jsModal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.jsModal-body {
+    display: flex;
+    flex-direction: column;
+}
+.jsModal-body h2 {
+    text-align: left;
+    margin-bottom: 5px;
+}
+.jsModal-body .js_link_container {
+    padding: 5px;
+    max-height: 140px;
+    overflow: scroll;
+    overflow-x: hidden;
+    border: 1px solid #dedede;
+}
+.jsModal-body .js_link_container::-webkit-scrollbar {
+    width: 7px;
+}
+.jsModal-body .js_link_container::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 5px;
+}
+.jsModal-body .js_link_container::-webkit-scrollbar-thumb:hover {
+    background: rgb(66, 66, 66);
+}
+.jsModal-body .js_link_container .js_link {
+    border-bottom: 1px solid #e9e9e9;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+}
+.jsModal-body .js_link_container .js_link:hover {
+    background-color: #d8d8d8;
+}
+
+.jsModal-body .js_link_container .js_link .chkbox, .jsModal-body .js_link_container .js_link .link {
+    display: flex;
+    align-items: center;
+}
+.jsModal-body .js_link_container .js_link .link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.jsModal-body .js_link_container .js_link .link .link-open-btn {
+    background-color: gray;
+    color: white;
+    padding: 1px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+.js_numbers {
+    display: flex;
+    padding: 3px;
+    background-color: #c2c2c2;
+}
+.js_numbers span {
+    margin: 3px;
+}
+.js_numbers .selected_number {
+    flex: 1;
+}
+.js_numbers .select_all_links_btn {
+    cursor: pointer;
+}
+.js_numbers .select_all_links_btn:hover {
+    text-decoration: underline;
+}
