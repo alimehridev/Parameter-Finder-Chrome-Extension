@@ -236,10 +236,8 @@ function getKeywordsByURL(url, callback) {
 }
 
 function getKeywordsByPageUrl(url, pageUrl, callback) {
-  const storageKey = 'url_keywords';
-
-  chrome.storage.local.get([storageKey], (result) => {
-    const allData = result[storageKey] || {};
+  chrome.storage.local.get(['url_keywords'], (result) => {
+    const allData = result['url_keywords'] || {};
     chrome.storage.local.get("urls", (result) => {
       const arr = result["urls"] || [];
       url = matchAnyPattern(arr, url, true)
@@ -266,7 +264,7 @@ function getKeywordsByPageUrl(url, pageUrl, callback) {
 
 chrome.storage.local.get("urls", (result) => {
   const arr = result["urls"] || [];
-  if (matchAnyPattern(arr, url)) {
+  if (matchAnyPattern(arr, location.href)) {
     const observer = new MutationObserver((e) => {
         getKeywordsByPageUrl(url, location.href.split("?")[0], (keywords) => {
           if (keywords) {
@@ -276,7 +274,6 @@ chrome.storage.local.get("urls", (result) => {
           }
         });
         checkForParameters();
-        // chrome.runtime.sendMessage({type: "js_link_finder", text: document.innerHTML})
     });
 
     observer.observe(document.body, {

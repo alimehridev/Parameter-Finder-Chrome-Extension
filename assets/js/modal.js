@@ -25,11 +25,6 @@ function buildQueryString(keys, fixed = "XXXXX", url_encoding = true) {
       .map(key => `${key}=${fixed}-${generateRandomString(6)}`)
       .join('&');
 }
-
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
 function openModal() {
   document.getElementById("output").textContent = ""
   document.getElementById("chunk-number").value = 20

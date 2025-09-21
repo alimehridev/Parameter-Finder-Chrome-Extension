@@ -5,6 +5,12 @@ function notifyBar(message) {
     });
   };
 };
+
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
 function getURLFactors(url, callback) {
   chrome.storage.local.get("url_factors", (data) => {
     const allFactors = data.url_factors || {};

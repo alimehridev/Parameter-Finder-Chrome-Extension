@@ -1,8 +1,3 @@
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
-
 function countUppercase(str) {
   const matches = str.match(/[A-Z]/g);
   return matches ? matches.length : 0;
