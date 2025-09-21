@@ -178,15 +178,7 @@ function checkForParameters() {
           scripts.forEach((script, index) => {
             script_content = script.textContent
             let founded = []
-            try{
-              founded = founded.concat(script_content.match(/\b(?:var|let|const)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/g).map(item => item.split(" ")[1]))
-            }catch{}
-            try{
-              founded = founded.concat(script_content.match(/["|']([\w\-]+)["|']\s*?:/g).map(i => i.split('"')[1]))
-            }catch{}
-            try{
-              founded = founded.concat(script_content.match(/function\s*\w*\s*\(([^)]*)\)|(\w*\s*=\s*)?\(?\s*([^)=]*)\s*\)?\s*=>/g).map(item => item.match(/\(.*\)/g)[0].replace("(", "").replace(")", "").split(",").map(item => item.trim())).filter(item => item != "").flat())
-            }catch{}
+            founded = extract_from_js_content(script_content)
             uniqueParameters = uniqueParameters.concat([...new Set(founded)])
             uniqueParameters = [...new Set(uniqueParameters)]
             saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)

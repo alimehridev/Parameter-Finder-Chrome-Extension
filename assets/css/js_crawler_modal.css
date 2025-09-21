@@ -14,7 +14,7 @@
 
 .jsModal-content {
   background-color: #fefefe;
-  margin: 7% auto;
+  margin: 5% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 650px;
@@ -105,4 +105,39 @@
 }
 .js_numbers .select_all_links_btn:hover {
     text-decoration: underline;
+}
+
+.jsModal-body .crawler-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5px;
+    border: 1px solid #dedede;
+}
+
+.jsModal-body .crawler-options .crawler-option {
+    width: 49%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+    font-size: 12px;
+    justify-content: space-between;
+    margin-right: 1px;
+    font-weight: bold;
+}
+.jsModal-body .crawl_btn {
+    padding: 10px 15px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: #45a049;
+    flex: 1;
+}
+.jsModal-body .crawl_btn:hover {
+    background-color: #255827;
+
 }

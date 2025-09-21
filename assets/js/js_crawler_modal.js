@@ -52,7 +52,7 @@ document.querySelector(".js_crawler_settings").addEventListener("click", () => {
 })
 
 
-document.querySelector(".js_crawler_settings").click()
+// document.querySelector(".js_crawler_settings").click()
 
 
 function func1(){
@@ -89,3 +89,16 @@ document.querySelector(".select_all_links_btn").addEventListener("click", (el) =
     }
 })
 
+document.querySelector(".crawl_btn").addEventListener("click", () => {
+    let links = Object.values(document.querySelectorAll('input[name="link_chbox"]')).filter(e => e.checked == 1).map(e => e.getAttribute("aria-link"))
+    let options = Object.values(document.querySelectorAll('.options_chbox')).filter(e => e.checked == 1).map(e => e.id)
+    let params = []
+    links.forEach(link => {
+        extract_from_js_link(link, options).then(
+            result => {
+                params = [...new Set(params.concat(result))]
+                console.log(params)
+            }
+        )
+    })
+})

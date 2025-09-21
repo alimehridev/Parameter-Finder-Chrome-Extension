@@ -2,6 +2,7 @@ function paramChecker(parameters){
     parameters = parameters.filter(str => !/\s/.test(str))                                     // نبودن فاصله توی رشته
     parameters = parameters.filter(str => !/\&/.test(str))                                     // نبودن & توی رشته
     parameters = parameters.filter(str => !/\#/.test(str))                                     // نبودن # توی رشته
+    parameters = parameters.filter(str => !/\=/.test(str))                                     // نبودن # توی رشته
     parameters = parameters.filter(str => !/\//.test(str))                                     // نبودن / توی رشته
     parameters = parameters.filter(str => !/\\/.test(str))                                     // نبودن \ توی رشته
     parameters = parameters.filter(str => !/\?/.test(str))                                     // نبودن ? توی رشته
@@ -13,6 +14,7 @@ function paramChecker(parameters){
     parameters = parameters.filter(str => !/%$/.test(str))                                    // تموم نشدن با %
     parameters = parameters.filter(str => !/^-/.test(str))                                    // تموم نشدن با %
     parameters = parameters.filter(str => /^[a-zA-Z0-9_]|[a-zA-Z0-9_]$/.test(str))            // اگه با غیر عددی، حرفی یا _ شروع و پایان یافته کنسله
+    parameters = parameters.filter(str => !/^[0-9]$/.test(str))                          // تشخیص اعداد تک رقمی
 
     return [...new Set(parameters)]
 }
@@ -101,26 +103,42 @@ function extractParenthesesContent(text) {
 
   return paramChecker(matches);
 }
-function extract_from_js_content(content){
+function extract_from_js_content(content, options = ['crawl_strings', 'crawl_varnames', 'crawl_parameters', 'crawl_curlybraces', 'crawl_objectkeys', 'crawl_parentheses']){
     const beautified = js_beautify(content, { indent_size: 2 });
     let params = []
-    params = params.concat(extractStrings(beautified))
-    params = params.concat(extractVariableNames(beautified))
-    params = params.concat(extractParams(beautified))
-    params = params.concat(extractBracesContent(beautified))
-    params = params.concat(extractObjectKeys(beautified))
-    params = params.concat(extractParenthesesContent(beautified))
+    if(options.includes("crawl_strings")){
+      params = params.concat(extractStrings(beautified))
+    }
+    if(options.includes("crawl_varnames")){
+      params = params.concat(extractVariableNames(beautified))
+    }
+    if(options.includes("crawl_parameters")){
+      params = params.concat(extractParams(beautified))
+    }
+    if(options.includes("crawl_curlybraces")){
+      params = params.concat(extractBracesContent(beautified))
+    }
+    if(options.includes("crawl_objectkeys")){
+      params = params.concat(extractObjectKeys(beautified))
+    }
+    if(options.includes("crawl_parentheses")){
+      params = params.concat(extractParenthesesContent(beautified))
+    }
     params = [...new Set(params)]
     return params
 }
 
-async function extract_from_js_link(link) {
+async function extract_from_js_link(link, options = ['crawl_strings', 'crawl_varnames', 'crawl_parameters', 'crawl_curlybraces', 'crawl_objectkeys', 'crawl_parentheses']) {
     const response = await fetch(link, {
         method: 'GET',
         headers: { 'Content-Type': 'text/plain' }
     });
-    const content = await response.text();
-    return extract_from_js_content(content);
+    if (response.status === 200) {
+      const content = await response.text();
+      return extract_from_js_content(content, options);
+    }else {
+      return []
+    }
 }
 
 

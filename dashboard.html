@@ -175,15 +175,49 @@
         <div class="jsModal-content">
           <span class="jsModal-close">&times;</span>
           <div class="jsModal-body">
-            <h2>Javascript links</h2>
-            <div class="js_link_container">
-              
+            <div>
+              <h2>Javascript links</h2>
+              <div class="js_link_container">
+                
+              </div>
+              <div class="js_numbers">
+                <span class="links_number">0 javascript links</span>
+                <span class="delimited">|</span>
+                <span class="selected_number">0 links selected</span>
+                <span class="select_all_links_btn">Select None</span>
+              </div>
             </div>
-            <div class="js_numbers">
-              <span class="links_number">0 javascript links</span>
-              <span class="delimited">|</span>
-              <span class="selected_number">0 links selected</span>
-              <span class="select_all_links_btn">Select None</span>
+            <div>
+              <h2 style="margin-top: 12px;">Crawler options</h2>
+              <div class="crawler-options">
+                <div class="crawler-option">
+                  <label for="crawl_strings">Strings values</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_strings" id="crawl_strings">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_varnames">Variables names</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_varnames" id="crawl_varnames">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_parameters">URL parameters</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_parameters" id="crawl_parameters">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_curlybraces">Curly brace values</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_curlybraces" id="crawl_curlybraces">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_objectkeys">Objects keys</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_objectkeys" id="crawl_objectkeys">
+                </div>
+                <div class="crawler-option">
+                  <label for="crawl_parentheses">Parentheses values</label>
+                    <input class="options_chbox" type="checkbox" checked name="crawl_parentheses" id="crawl_parentheses">
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 5px; display: flex;">
+              <button class="crawl_btn">Crawl</button>
             </div>
           </div>
         </div>

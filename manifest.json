@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["assets/js/helpers.js", "content.js"],
+      "js": ["assets/js/helpers.js", "assets/js/js_parameter_finder.js", "assets/js/beautify.js", "content.js"],
       "run_at": "document_idle"
     }
   ]
