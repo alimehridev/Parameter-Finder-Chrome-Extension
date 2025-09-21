@@ -203,7 +203,7 @@ function checkForParameters() {
               return location.href.endsWith("/") ? location.href + src : location.href + "/" + src
               // return location.href.endsWith("/") ? (location.href + src).split("?")[0] : (location.href + "/" + src).split("?")[0]
             }
-          }).filter(src => src != undefined)
+          }).filter(src => src != undefined).filter(src => src.split("?")[0].endsWith(".js"))
           saveJavascriptFilesURL(srcs, location.href.split("?")[0], url)
         }
         
