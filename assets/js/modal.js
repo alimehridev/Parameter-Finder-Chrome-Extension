@@ -5,25 +5,9 @@ function chunkArrayInPairs(arr, chunk) {
   }
   return result;
 }
-function generateRandomString(length = 6) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
-
-
 function buildQueryString(keys, fixed = "XXXXX", url_encoding = true) {
-  if (url_encoding){
-    return keys
-      .map(key => `${encodeURIComponent(key)}=${fixed}-${generateRandomString(6)}`)
-      .join('&');
-  }
-  return keys
-      .map(key => `${key}=${fixed}-${generateRandomString(6)}`)
-      .join('&');
+  let counter = 1
+  return keys.map(key => `${url_encoding ? encodeURIComponent(key) : key}=${fixed}${counter++}`).join('&')
 }
 function openModal() {
   document.getElementById("output").textContent = ""
