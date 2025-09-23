@@ -57,7 +57,7 @@ document.getElementById("openBtn").addEventListener("click", () => {
     let links = document.getElementById("output").textContent.split("\n")
     links.forEach(url => {
       if(url != ""){
-        window.open(`/lazyloading.html?url=${url}`, '_blank');
+        window.open(`/lazyloading.html?url=${encodeURIComponent(url)}`, '_blank');
       }
     })
   }
