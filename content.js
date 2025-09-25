@@ -1,4 +1,4 @@
-const url = location.origin + location.pathname;
+const url = location.href;
 let uniqueParameters = []
 
 
@@ -109,7 +109,7 @@ function checkForParameters() {
                 )
             ]
           )
-          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href, url)
         }catch{}
 
         if (factors.id == 1){
@@ -118,7 +118,7 @@ function checkForParameters() {
           )]);
 
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location, url)
           console.log("id attributes: ", factors.id)
         }
         if (factors.class == 1){
@@ -128,7 +128,7 @@ function checkForParameters() {
               .filter(cls => cls)
           )]);
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href, url)
           console.log("class attributes: ", factors.class)
         }
         if (factors.name == 1){
@@ -136,7 +136,7 @@ function checkForParameters() {
             Array.from(document.querySelectorAll('[name]')).map(el => el.getAttribute('name'))
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href, url)
           console.log("name attributes: ", factors.name)
         }
         if (factors.href == 1){
@@ -152,7 +152,7 @@ function checkForParameters() {
             hrefs
           )].flat())
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href, url)
           console.log("href attributes: ", factors.href)
         }
         if (factors.src == 1){
@@ -168,7 +168,7 @@ function checkForParameters() {
             srcs
           )].flat())
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href, url)
           console.log("src attributes: ", factors.src)
         }
         
@@ -181,7 +181,7 @@ function checkForParameters() {
             founded = extract_from_js_content(script_content)
             uniqueParameters = uniqueParameters.concat([...new Set(founded)])
             uniqueParameters = [...new Set(uniqueParameters)]
-            saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+            saveKeywordsToURLFactors(uniqueParameters, location.href, url)
           });
         }
         
@@ -204,7 +204,7 @@ function checkForParameters() {
               // return location.href.endsWith("/") ? (location.href + src).split("?")[0] : (location.href + "/" + src).split("?")[0]
             }
           }).filter(src => src != undefined).filter(src => src.split("?")[0].endsWith(".js"))
-          saveJavascriptFilesURL(srcs, location.href.split("?")[0], url)
+          saveJavascriptFilesURL(srcs, location.href, url)
         }
         
         if (factors.json == 1){
@@ -215,7 +215,7 @@ function checkForParameters() {
             location.search.split("?")[1].split("&").map(item => item.split("=")[0])
           )])
           uniqueParameters = [...new Set(uniqueParameters)]
-          saveKeywordsToURLFactors(uniqueParameters, location.href.split("?")[0], url)
+          saveKeywordsToURLFactors(uniqueParameters, location.href, url)
           console.log("url attributes: ", factors.url)
         }
       }
@@ -266,7 +266,7 @@ chrome.storage.local.get("urls", (result) => {
   const arr = result["urls"] || [];
   if (matchAnyPattern(arr, location.href)) {
     const observer = new MutationObserver((e) => {
-        getKeywordsByPageUrl(url, location.href.split("?")[0], (keywords) => {
+        getKeywordsByPageUrl(url, location.href, (keywords) => {
           if (keywords) {
             chrome.runtime.sendMessage({ type: "setBadge", text: keywords.length.toString() });
           } else {

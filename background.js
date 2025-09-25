@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get("urls", (result) => {
     const arr = result["urls"] || [];
-    let url = (new URL(tab.url).origin) + (new URL(tab.url).pathname);
+    let url = tab.url;
     chrome.tabs.query({}, (tabs) => {
       const existingTab = tabs.find(tab => tab.url && (tab.url.includes(chrome.runtime.id + `/dashboard.html?url=${encodeURIComponent(url)}`) || tab.url.includes(chrome.runtime.id + `/dashboard.html?url_add=${encodeURIComponent(url)}`) ));
       if(existingTab){

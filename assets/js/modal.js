@@ -29,12 +29,16 @@ function openModal() {
               }catch{}
           }
           keywords = [...new Set(keywords)]
-          let chunk = 20
+          let chunk = 20 - new URL(key).search.split("&").length
           keywords = chunkArrayInPairs(keywords, chunk)
-          key = (new URL(key)).origin + (new URL(key)).pathname
+          // key = (new URL(key)).origin + (new URL(key)).pathname
           let chunk_url_encoding = document.getElementById("urlencode-chbox").checked
           keywords.forEach(chunk => {
-              document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+              if(new URL(key).search){
+                document.getElementById("output").textContent += `${key}&${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+              }else {
+                document.getElementById("output").textContent += `${key}?${buildQueryString(chunk, fixed_value, chunk_url_encoding)}\n` 
+              }
             })
           }
         })
